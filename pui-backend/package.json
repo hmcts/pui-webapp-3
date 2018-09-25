@@ -1,0 +1,39 @@
+{
+    "name": "pui-backend",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "build": "npx tsc ",
+        "start": "cd dist && node server.js",
+        "watch": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/server.ts"
+    },
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@types/request-promise": "^4.1.42",
+        "@types/session-file-store": "^1.2.0",
+        "express": "^4.16.3",
+        "global-tunnel-ng": "^2.6.0",
+        "nodemon": "^1.18.4",
+        "session-file-store": "^1.2.0",
+        "ts-node": "^7.0.1",
+        "tsc": "^1.20150623.0",
+        "tslint": "^5.11.0",
+        "typescript": "^3.0.3"
+    },
+    "dependencies": {
+        "@hmcts/div-idam-express-middleware": "https://github.com/hmcts/div-idam-express-middleware",
+        "@types/express": "^4.16.0",
+        "@types/express-session": "^1.15.11",
+        "@types/log4js": "^2.3.5",
+        "axios": "^0.18.0",
+        "cookie-parser": "^1.4.3",
+        "express-session": "^1.15.6",
+        "jsonpath": "^1.0.0",
+        "jwt-decode": "^2.2.0",
+        "log4js": "^3.0.5",
+        "otp": "^0.1.3",
+        "request-promise": "^4.2.2"
+    }
+}

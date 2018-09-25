@@ -1,0 +1,16 @@
+<app-hmcts-global-header [serviceName]="{
+  name: 'Professional case manager',
+  url: '/'
+}" [navigation]="{
+  label: 'Account navigation',
+  items: [{
+      text: 'Sign out',
+      href: logoutLink
+  }]
+}" ></app-hmcts-global-header>
+
+<app-hmcts-primary-navigation [label]="" [items]="[{
+  text: 'Dashboard',
+  href: '/',
+  active: true
+}]"></app-hmcts-primary-navigation>
