@@ -3,40 +3,35 @@ import * as express from 'express'
 import * as log4js from 'log4js'
 import { map } from 'p-iteration'
 import { config } from '../config'
-import { Case } from '../lib/model'
+import { Case, EnhancedRequest, SimpleCase } from '../lib/model'
 import { process } from '../lib/processors'
 import { templates } from '../lib/templates'
 import * as sscsCaseListTemplate from '../lib/templates/sscs/benefit'
 
 const logger = log4js.getLogger('auth')
-logger.level = 'info'
+logger.level = config.logging
 
 let http: AxiosInstance
 
 const CORJuristiction = 'SSCS'
 
-export interface EnhancedRequest extends express.Request {
-    auth?: {
-        token: string
-        userId: string
-    }
-}
-
-async function getCases(userId: string): Promise<any> {
-    const collection = await map(config.jurisdictions, async jurisdiction => {
+async function getCases(userId: string): Promise<Case[][]> {
+    const collection: Case[][] = await map(config.jurisdictions, async jurisdiction => {
         logger.info('Getting cases for ', jurisdiction.jur)
         const response = await http.get(
             `${config.ccd.dataApi}/caseworkers/${userId}/jurisdictions/${jurisdiction.jur}/case-types/${
                 jurisdiction.caseType
             }/cases?sortDirection=DESC${jurisdiction.filter}`
         )
-        return response.data
+        const caseList: Case[] = response.data
+        console.log(caseList)
+        return caseList
     })
 
     return collection
 }
 
-async function getCOR(casesData) {
+async function getCOR(casesData: Case[]) {
     const caseIds = casesData.map(caseRow => 'case_id=' + caseRow.id).join('&')
 
     if (casesData[0].jurisdiction === CORJuristiction) {
@@ -56,8 +51,8 @@ async function getCOR(casesData) {
 
                     caseRow.state = formattedState
 
-                    if (new Date(caseRow.last_modified) < new Date(state.state_datetime)) {
-                        caseRow.last_modified = state.state_datetime
+                    if (new Date(caseRow.lastModified) < new Date(state.state_datetime)) {
+                        caseRow.lastModified = state.state_datetime
                     }
                 }
             })
@@ -67,30 +62,31 @@ async function getCOR(casesData) {
     return casesData
 }
 
-function rawCasesReducer(cases, columns) {
+function rawCasesReducer(cases: Case[], columns) {
     return cases.map(caseRow => {
         return {
-            case_fields: columns.reduce((row, column) => {
+            caseFields: columns.reduce((row, column) => {
                 row[column.case_field_id] = process(column.value, caseRow)
                 return row
             }, {}),
-            case_id: caseRow.id,
-            case_jurisdiction: caseRow.jurisdiction,
-            case_type_id: caseRow.case_type_id,
+            caseId: caseRow.id,
+            caseJurisdiction: caseRow.jurisdiction,
+            caseTypeId: caseRow.caseTypeId,
         }
     })
 }
 
-async function processCaseList(caseList: Case[]) {
-    let results: any = []
+async function processCaseList(caseList: Case[]): Promise<SimpleCase[]> {
+    let results: SimpleCase[] = []
+
     if (caseList) {
         logger.info('Getting COR')
         const casesData = await getCOR(caseList)
         const jurisdiction = casesData[0].jurisdiction
-        const caseType = casesData[0].case_type_id
+        const caseType = casesData[0].caseTypeId
         logger.info('Getting template')
         const template = templates(jurisdiction, caseType).default
-        results = rawCasesReducer(casesData, template.columns).filter(row => !!row.case_fields.case_ref)
+        results = rawCasesReducer(casesData, template.columns).filter(row => !!row.caseFields.caseRef)
     }
 
     return results
@@ -102,7 +98,7 @@ function sortResults(a: Case, b: Case) {
     return dateA - dateB
 }
 
-function handle(promise, message, res) {
+function asyncReturnOrError(promise: Promise<any>, message: string, res: express.Response): any {
     return promise
         .then(data => {
             return data
@@ -126,23 +122,20 @@ export async function get(req: EnhancedRequest, res: express.Response, next: exp
 
     logger.info('Getting cases')
 
-    caseLists = await handle(getCases(req.auth.userId), 'Error Getting cases', res)
+    caseLists = await asyncReturnOrError(getCases(req.auth.userId), 'Error Getting cases', res)
 
     if (caseLists) {
-        logger.info('Processing cases', caseLists.length)
+        logger.info('Processing cases ', caseLists.length)
 
-        //  const results = [].(concat(await  caseLists.map(async caseList => await processCaseList(caseList)))
-        //             .sort(sortResults)
-
-        let [err, results] = await handle(
-            map(caseLists, async caseList => {
+        let [err, results] = await asyncReturnOrError(
+            map(caseLists, async (caseList: Case[]) => {
                 return await processCaseList(caseList)
             }),
             'Error Processing List',
             res
         )
 
-        results = [].concat(...results)
+        results = [].concat(...results).sort(sortResults)
 
         const aggregatedData = { ...sscsCaseListTemplate.default, results }
         res.setHeader('Access-Control-Allow-Origin', '*')

@@ -3,11 +3,12 @@ import * as express from 'express'
 import * as jwtDecode from 'jwt-decode'
 import * as log4js from 'log4js'
 import { config } from '../config'
+import { EnhancedRequest } from '../lib/model'
 import { serviceTokenGenerator } from './service-token'
 
 const secret = process.env.IDAM_SECRET
 const logger = log4js.getLogger('auth')
-logger.level = 'info'
+logger.level = config.logging
 
 const http = axios.create({
     headers: {
@@ -15,7 +16,7 @@ const http = axios.create({
     },
 })
 
-export async function attach(req, res, next) {
+export async function attach(req: EnhancedRequest, res: express.Response, next: express.NextFunction) {
     try {
         const token = await serviceTokenGenerator()
         req.headers.ServiceAuthorization = token.token
@@ -43,7 +44,6 @@ export async function attach(req, res, next) {
 }
 
 export async function getTokenFromCode(req: express.Request, res: express.Response): Promise<AxiosResponse> {
-    console.log('secret:', secret)
     const Authorization = `Basic ${new Buffer(`${config.idam.idamClientID}:${secret}`).toString('base64')}`
     const options = {
         headers: {
@@ -63,7 +63,7 @@ export async function getTokenFromCode(req: express.Request, res: express.Respon
     )
 }
 
-export async function getUserDetails(jwt): Promise<AxiosResponse> {
+export async function getUserDetails(jwt: string): Promise<AxiosResponse> {
     const options = {
         headers: { Authorization: `Bearer ${jwt}` },
     }

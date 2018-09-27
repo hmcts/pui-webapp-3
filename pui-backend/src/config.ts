@@ -34,6 +34,7 @@ export const config = {
             jur: 'DIVORCE',
         },
     ],
+    logging: 'info',
     microservice: 'jui_webapp',
     port: 3000,
     protocol: 'http',

@@ -1,7 +1,12 @@
 import axios, { AxiosInstance } from 'axios'
 import * as jwtDecode from 'jwt-decode'
+import * as log4js from 'log4js'
 import * as otp from 'otp'
 import { config } from '../config'
+import { Token } from '../lib/model'
+
+const logger = log4js.getLogger('auth')
+logger.level = config.logging
 
 const microservice = config.microservice
 const secret = process.env.JUI_S2S_SECRET
@@ -9,7 +14,7 @@ const secret = process.env.JUI_S2S_SECRET
 const cache = {}
 let http: AxiosInstance
 
-function validateCache() {
+function validateCache(): boolean {
     const currentTime = Math.floor(Date.now() / 1000)
     if (!cache[microservice]) {
         return false
@@ -17,12 +22,12 @@ function validateCache() {
     return currentTime < cache[microservice].expiresAt
 }
 
-function getToken() {
+function getToken(): Token {
     return cache[microservice]
 }
 
 async function generateToken() {
-    console.log('generating from secret  :', { secret })
+    logger.info('generating from secret  :', { secret })
     const oneTimePassword = otp({ secret }).totp()
     http = axios.create({})
 
@@ -38,10 +43,10 @@ async function generateToken() {
             token: response.data,
         }
     } catch (e) {
-        console.log('Error creating S2S token! S2S service error - ', e.message)
+        logger.info('Error creating S2S token! S2S service error - ', e.message)
     }
 }
-export async function serviceTokenGenerator() {
+export async function serviceTokenGenerator(): Promise<Token> {
     try {
         if (validateCache()) {
             return getToken()
@@ -50,6 +55,6 @@ export async function serviceTokenGenerator() {
             return getToken()
         }
     } catch (e) {
-        console.log('Failed to get S2S token')
+        logger.info('Failed to get S2S token')
     }
 }

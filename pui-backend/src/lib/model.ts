@@ -1,8 +1,25 @@
-import { AxiosResponse } from 'axios'
-import { createDeflate } from 'zlib'
+import * as express from 'express'
+
+export interface EnhancedRequest extends express.Request {
+    auth?: {
+        token: string
+        userId: string
+    }
+}
+
+export interface Token {
+    token: string
+}
 
 export interface CaseFields {
     dateOfLastAction: string
+}
+
+export interface SimpleCase {
+    caseFields: any[]
+    caseId: string
+    caseJurisdiction: any
+    caseTypeId: string
 }
 
 export class Case {
@@ -10,19 +27,21 @@ export class Case {
         return new Case(res)
     }
 
+    caseData: any
     caseFields: CaseFields
-    id: string
-    jurisdiction: string
     caseTypeId: string
     createDate: Date
+    id: string
+    jurisdiction: string
     lastModified: Date
     securityClassification: string
-    caseData: any
+
     dataClassification: any
     afterSubmitCallbackResponse: any
     // callbackResponseStatusCode: any
     // callbackResponseStatus: any
     seccurityClassifications: any
+    state: any
 
     constructor(res) {
         this.id = res.id
@@ -34,5 +53,6 @@ export class Case {
         this.caseData = res.caseData
         this.dataClassification = res.dataClassification
         this.securityClassification = res.securityClassification
+        this.state = res.state
     }
 }
