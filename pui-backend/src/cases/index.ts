@@ -24,7 +24,7 @@ export interface EnhancedRequest extends express.Request {
 
 async function getCases(userId: string): Promise<any> {
     const collection = await map(config.jurisdictions, async jurisdiction => {
-        logger.info('Getting cases for ', jurisdiction)
+        logger.info('Getting cases for ', jurisdiction.jur)
         const response = await http.get(
             `${config.ccd.dataApi}/caseworkers/${userId}/jurisdictions/${jurisdiction.jur}/case-types/${
                 jurisdiction.caseType
@@ -128,7 +128,9 @@ export async function get(req: EnhancedRequest, res: express.Response, next: exp
         try {
             //  const results = [].(concat(await  caseLists.map(async caseList => await processCaseList(caseList)))
             //             .sort(sortResults)
-            const results = await caseLists.map(caseList => processCaseList(caseList))
+            const results = await map(caseLists, async caseList => {
+                return await processCaseList(caseList)
+            })
             logger.info('Sending results')
 
             const aggregatedData = { ...sscsCaseListTemplate, results }

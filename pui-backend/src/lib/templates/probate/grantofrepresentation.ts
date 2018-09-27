@@ -1,101 +1,39 @@
 /*tslint:disable */
 export default {
-    details: {
-        fields: [
-            { value: '$.case_data.ihtReferenceNumber' },
-            {
-                value: ['$.case_data.deceasedForenames', '$.case_data.deceasedSurname'],
-            },
-        ],
-    },
-    sections: [
+    columns: [
         {
-            id: 'summary',
-            name: 'Summary',
-            type: 'page',
-            sections: [
-                {
-                    name: 'Summary',
-                    type: 'summary-panel',
-                    sections: [
-                        {
-                            name: 'Case details',
-                            type: 'data-list',
-                            fields: [
-                                {
-                                    label: 'Parties',
-                                    value: ['$.case_data.deceasedForenames', '$.case_data.deceasedSurname'],
-                                },
-                                {
-                                    label: 'Case type',
-                                    value: 'Grant of Representation',
-                                },
-                                {
-                                    label: 'Case number',
-                                    value: '$.id',
-                                },
-
-                                {
-                                    label: 'ProbateMan Case number',
-                                    value: '$.case_data.ihtReferenceNumber',
-                                },
-                            ],
-                        },
-                        {
-                            name: '',
-                            type: 'data-list',
-                            fields: [],
-                        },
-                        {
-                            name: 'Recent events',
-                            type: 'timeline',
-                            fields: [{ value: '$.events' }],
-                        },
-                    ],
-                },
-            ],
+            label: 'Case Reference',
+            case_field_id: 'case_ref',
+            value: '$.id',
         },
         {
-            id: 'casefile',
-            name: 'Case file',
-            type: 'page',
-            sections: [
-                {
-                    id: 'documents',
-                    name: 'Case file',
-                    type: 'document-panel',
-                    fields: [],
-                },
-            ],
+            label: 'Parties',
+            case_field_id: 'parties',
+            value: ['$.case_data.deceasedForenames', ' ', '$.case_data.deceasedSurname'],
         },
         {
-            id: 'timeline',
-            name: 'Timeline',
-            type: 'page',
-            sections: [
-                {
-                    id: 'events',
-                    name: 'Timeline',
-                    type: 'timeline-panel',
-                    fields: [{ value: '$.events' }],
-                },
-            ],
+            label: 'Type',
+            case_field_id: 'type',
+            value: 'Grant of Representation',
+        },
+        {
+            label: 'Decision needed on',
+            case_field_id: 'status',
+            value: '$.state',
+        },
+        {
+            label: 'Case Start Date',
+            case_field_id: 'createdDate',
+            value: '$.created_date',
+            date_format: 'd MMM yyyy',
+        },
+        {
+            label: 'Date of Last Action',
+            case_field_id: 'lastModified',
+            value: '$.last_modified',
+            date_format: 'd MMM yyyy',
         },
     ],
-    decision: {
-        id: 'decision',
-        name: 'Make a decision',
-        type: 'decision-page',
-        options: [
-            {
-                id: 'true',
-                name: 'True',
-            },
-            {
-                id: 'false',
-                name: 'False',
-            },
-        ],
-    },
 }
+
 /*tslint:enable */
