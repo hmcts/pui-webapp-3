@@ -14,8 +14,8 @@ import { DomainModule } from '../domain/domain.module'
 const routes: Routes = [
     {
         path: '',
-        component: DashboardComponent,
-        canActivate: [AuthService]
+        component: DashboardComponent
+        // canActivate: [AuthService]
     }
 ]
 

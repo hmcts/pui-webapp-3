@@ -4,9 +4,9 @@
 
     
     <div *ngIf="data$ | async as data">
-            <div> {{data|json}} </div>
+            <!-- <div> {{data|json}} </div> -->
         <span class="govuk-heading-m">Your cases</span>
-        <!-- <app-table *ngIf="data.results && data.results.length; else noResultsOrError" [data]="data"></app-table> -->
+        <app-table *ngIf="data.results && data.results.length; else noResultsOrError" [data]="data"></app-table>
         <ng-template #noResultsOrError>
             <span *ngIf="data.error; else noResults" data-selector="error-text" class="govuk-error-message">
                 There was an error getting your cases
