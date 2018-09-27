@@ -11,3 +11,4 @@ pui-backend/.history
 pui-backend/.sessions/*
 .history
 .directory
+.package-lock.json
