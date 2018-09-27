@@ -1,11 +1,11 @@
 import axios, { AxiosInstance } from 'axios'
 import * as jwtDecode from 'jwt-decode'
 import * as otp from 'otp'
-import * as request from 'request-promise'
 import { config } from '../config'
 
 const microservice = config.microservice
-const secret = process.env.S2S_SECRET
+const secret = process.env.JUI_S2S_SECRET
+
 const cache = {}
 let http: AxiosInstance
 
@@ -22,59 +22,20 @@ function getToken() {
 }
 
 async function generateToken() {
-    const oneTimePassword = otp({ secret }).totp()
-    const options = {
-        body: {
-            microservice,
-            oneTimePassword,
-        },
-        json: true,
-        method: 'POST',
-        url: `${config.s2s}/lease`,
-    }
-
-    return new Promise((resolve, reject) => {
-        request(options)
-            .then(body => {
-                const tokenData = jwtDecode(body)
-                _cache[microservice] = {
-                    expiresAt: tokenData.exp,
-                    token: body,
-                }
-                resolve()
-            })
-            .catch(e => {
-                console.log('Error creating S2S token! S2S service error - ', e.message)
-                reject()
-            })
-    })
-}
-
-async function generateTokenx() {
     console.log('generating from secret  :', { secret })
     const oneTimePassword = otp({ secret }).totp()
     http = axios.create({})
 
-    console.log('generating token :', {})
     try {
-        const response = await http
-            .post(`${config.s2s}/lease`, {
-                microservice,
-                oneTimePassword,
-            })
-            .then(
-                res => {
-                    console.log('okay, ', res)
-                },
-                res => {
-                    console.log('err,', res)
-                }
-            )
+        const response = await http.post(`${config.s2s}/lease`, {
+            microservice,
+            oneTimePassword,
+        })
 
-        const tokenData = jwtDecode(response)
+        const tokenData = jwtDecode(response.data)
         cache[microservice] = {
             expiresAt: tokenData.exp,
-            token: response,
+            token: response.data,
         }
     } catch (e) {
         console.log('Error creating S2S token! S2S service error - ', e.message)

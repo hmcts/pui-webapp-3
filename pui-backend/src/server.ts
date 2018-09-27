@@ -19,6 +19,8 @@ logger.level = 'info'
 
 logger.info('Using Config:\n', config)
 
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
+
 if (config.proxy) {
     globalTunnel.initialize({
         host: config.proxy.host,

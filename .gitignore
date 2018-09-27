@@ -1,0 +1,13 @@
+!pui-backend/node_modules/
+pui-backend/node_modules/*
+!pui-frontend/node_modules/
+pui-frontend/node_modules/*
+!pui-backend/dist/
+pui-backend/dist/*
+!pui-frontend/dist/
+pui-frontend/dist/*
+pui-backend/.history
+!pui-backend/.sessions/
+pui-backend/.sessions/*
+.history
+.directory
