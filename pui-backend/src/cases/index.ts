@@ -128,12 +128,13 @@ export async function get(req: EnhancedRequest, res: express.Response, next: exp
         try {
             //  const results = [].(concat(await  caseLists.map(async caseList => await processCaseList(caseList)))
             //             .sort(sortResults)
-            const results = await map(caseLists, async caseList => {
+            let results = await map(caseLists, async caseList => {
                 return await processCaseList(caseList)
             })
-            logger.info('Sending results')
 
-            const aggregatedData = { ...sscsCaseListTemplate, results }
+            results = [].concat(...results)
+
+            const aggregatedData = { ...sscsCaseListTemplate.default, results }
             res.setHeader('Access-Control-Allow-Origin', '*')
             res.setHeader('content-type', 'application/json')
             res.status(200).send(JSON.stringify(aggregatedData))

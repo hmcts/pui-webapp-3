@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http'
 import { NgModule } from '@angular/core'
 
 import { CommonModule } from '@angular/common'
@@ -15,9 +16,10 @@ import { ReactiveFormsModule } from '@angular/forms'
 import { HmctsModule } from '../hmcts/hmcts.module'
 import { CaseService } from './services/case.service'
 import { SearchResultComponent } from './components/search-result/search-result.component'
+import { HttpClientModule } from '@angular/common/http'
 
 @NgModule({
-    imports: [CommonModule, RouterModule, ReactiveFormsModule, HmctsModule, SharedModule],
+    imports: [CommonModule, RouterModule, ReactiveFormsModule, HmctsModule, SharedModule, HttpClientModule],
     exports: [HeaderComponent, SearchResultComponent],
     declarations: [HeaderComponent, SearchResultComponent],
     providers: [CaseService]
