@@ -90,7 +90,6 @@ async function processCaseList(caseList: Case[]) {
         const caseType = casesData[0].case_type_id
         logger.info('Getting template')
         const template = templates(jurisdiction, caseType).default
-
         results = rawCasesReducer(casesData, template.columns).filter(row => !!row.case_fields.case_ref)
     }
 
@@ -105,6 +104,7 @@ function sortResults(a: Case, b: Case) {
 
 export async function get(req: EnhancedRequest, res: express.Response, next: express.NextFunction) {
     let caseLists: Case[][]
+    let err 
 
     http = axios.create({
         headers: {
@@ -116,19 +116,19 @@ export async function get(req: EnhancedRequest, res: express.Response, next: exp
 
     logger.info('Getting cases')
     try {
-        caseLists = await getCases(req.auth.userId)
-    } catch (e) {
-        logger.error('Error getting cases')
-        res.status(e.statusCode || 500).send(e)
-    }
-
+        [err, caseLists] = await getCases(req.auth.userId)
+        if (err) {
+            logger.error('Error getting cases')
+            res.status(e.statusCode || 500).send(e)
+        }
+    } 
     if (caseLists) {
         logger.info('Processing cases', caseLists.length)
 
         try {
             //  const results = [].(concat(await  caseLists.map(async caseList => await processCaseList(caseList)))
             //             .sort(sortResults)
-            let results = await map(caseLists, async caseList => {
+            let [err, results] = await map(caseLists, async caseList => {
                 return await processCaseList(caseList)
             })
 
