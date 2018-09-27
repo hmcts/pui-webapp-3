@@ -102,9 +102,19 @@ function sortResults(a: Case, b: Case) {
     return dateA - dateB
 }
 
+function handle(promise, message, res) {
+    return promise
+        .then(data => {
+            return data
+        })
+        .catch(err => {
+            logger.error('Error getting cases')
+            res.status(err.statusCode || 500).send(err)
+        })
+}
+
 export async function get(req: EnhancedRequest, res: express.Response, next: express.NextFunction) {
     let caseLists: Case[][]
-    let err 
 
     http = axios.create({
         headers: {
@@ -115,33 +125,28 @@ export async function get(req: EnhancedRequest, res: express.Response, next: exp
     })
 
     logger.info('Getting cases')
-    try {
-        [err, caseLists] = await getCases(req.auth.userId)
-        if (err) {
-            logger.error('Error getting cases')
-            res.status(e.statusCode || 500).send(e)
-        }
-    } 
+
+    caseLists = await handle(getCases(req.auth.userId), 'Error Getting cases', res)
+
     if (caseLists) {
         logger.info('Processing cases', caseLists.length)
 
-        try {
-            //  const results = [].(concat(await  caseLists.map(async caseList => await processCaseList(caseList)))
-            //             .sort(sortResults)
-            let [err, results] = await map(caseLists, async caseList => {
+        //  const results = [].(concat(await  caseLists.map(async caseList => await processCaseList(caseList)))
+        //             .sort(sortResults)
+
+        let [err, results] = await handle(
+            map(caseLists, async caseList => {
                 return await processCaseList(caseList)
-            })
+            }),
+            'Error Processing List',
+            res
+        )
 
-            results = [].concat(...results)
+        results = [].concat(...results)
 
-            const aggregatedData = { ...sscsCaseListTemplate.default, results }
-            res.setHeader('Access-Control-Allow-Origin', '*')
-            res.setHeader('content-type', 'application/json')
-            res.status(200).send(JSON.stringify(aggregatedData))
-        } catch (error) {
-            logger.error(error)
-
-            res.status(error.statusCode || 500).send(error)
-        }
+        const aggregatedData = { ...sscsCaseListTemplate.default, results }
+        res.setHeader('Access-Control-Allow-Origin', '*')
+        res.setHeader('content-type', 'application/json')
+        res.status(200).send(JSON.stringify(aggregatedData))
     }
 }
