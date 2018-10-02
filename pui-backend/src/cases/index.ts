@@ -23,8 +23,9 @@ async function getCases(userId: string): Promise<Case[][]> {
                 jurisdiction.caseType
             }/cases?sortDirection=DESC${jurisdiction.filter}`
         )
-        const caseList: Case[] = response.data
-        console.log(caseList)
+
+        const caseList: Case[] = response.data.map(caseJson => Case.create(caseJson))
+
         return caseList
     })
 
@@ -62,8 +63,8 @@ async function getCOR(casesData: Case[]) {
     return casesData
 }
 
-function rawCasesReducer(cases: Case[], columns) {
-    return cases.map(caseRow => {
+function rawCasesReducer(caseList: Case[], columns) {
+    return caseList.map(caseRow => {
         return {
             caseFields: columns.reduce((row, column) => {
                 row[column.case_field_id] = process(column.value, caseRow)
@@ -84,9 +85,10 @@ async function processCaseList(caseList: Case[]): Promise<SimpleCase[]> {
         const casesData = await getCOR(caseList)
         const jurisdiction = casesData[0].jurisdiction
         const caseType = casesData[0].caseTypeId
-        logger.info('Getting template')
+        logger.info(`Getting template ${jurisdiction}, ${caseType}`)
         const template = templates(jurisdiction, caseType).default
         results = rawCasesReducer(casesData, template.columns).filter(row => !!row.caseFields.caseRef)
+        console.log(results)
     }
 
     return results

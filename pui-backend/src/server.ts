@@ -59,6 +59,7 @@ app.use(cookieParser())
 app.get('/oauth2/callback', auth.oauth)
 
 app.use(auth.attach)
+app.get('/api/user', auth.user)
 app.get('/api/cases', cases.get)
 
 // Start !

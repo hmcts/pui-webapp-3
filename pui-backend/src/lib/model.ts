@@ -2,8 +2,10 @@ import * as express from 'express'
 
 export interface EnhancedRequest extends express.Request {
     auth?: {
+        roles: string[]
         token: string
         userId: string
+        expires: number
     }
 }
 
@@ -24,6 +26,7 @@ export interface SimpleCase {
 
 export class Case {
     static create(res: any) {
+        console.log(res)
         return new Case(res)
     }
 
@@ -38,21 +41,19 @@ export class Case {
 
     dataClassification: any
     afterSubmitCallbackResponse: any
-    // callbackResponseStatusCode: any
-    // callbackResponseStatus: any
     seccurityClassifications: any
     state: any
 
     constructor(res) {
         this.id = res.id
         this.jurisdiction = res.jurisdiction
-        this.caseTypeId = res.caseTypeId
-        this.createDate = res.createDeflate
-        this.lastModified = res.lastModified
-        this.securityClassification = res.securityClassification
-        this.caseData = res.caseData
-        this.dataClassification = res.dataClassification
-        this.securityClassification = res.securityClassification
+        this.caseTypeId = res.case_type_id
+        this.createDate = res.created_date
+        this.lastModified = res.last_modified
+        this.securityClassification = res.security_classification
+        this.caseData = res.case_data
+        this.dataClassification = res.data_classification
+        this.securityClassification = res.security_classification
         this.state = res.state
     }
 }
