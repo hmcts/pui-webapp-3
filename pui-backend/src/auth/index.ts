@@ -26,30 +26,26 @@ export async function attach(req: EnhancedRequest, res: express.Response, next: 
         logger.error('Could not add S2S token header')
     }
 
-    if (!session.auth) {
-        next()
+    const userId = session.auth.userId
+    const jwt = session.auth.token
+    const roles = session.auth.roles
+
+    const jwtData = jwtDecode(jwt)
+    const expires = new Date(jwtData.exp).getTime()
+    const now = new Date().getTime() / 1000
+    const expired = expires < now
+
+    logger.info('Attaching auth')
+
+    if (expired) {
+        res.status(401).send('Token expired!')
     } else {
-        const userId = session.auth.userId
-        const jwt = session.auth.token
-        const roles = session.auth.roles
-
-        const jwtData = jwtDecode(jwt)
-        const expires = new Date(jwtData.exp).getTime()
-        const now = new Date().getTime() / 1000
-        const expired = expires < now
-
-        logger.info('Attaching auth')
-
-        if (expired) {
-            res.status(401).send('Token expired!')
-        } else {
-            req.auth = jwtData
-            req.auth.token = jwt
-            req.auth.userId = userId
-            req.auth.expires = expires
-            req.auth.roles = roles
-            next()
-        }
+        req.auth = jwtData
+        req.auth.token = jwt
+        req.auth.userId = userId
+        req.auth.expires = expires
+        req.auth.roles = roles
+        next()
     }
 }
 
@@ -107,12 +103,6 @@ export async function oauth(req: express.Request, res: express.Response, next: e
 }
 
 export function user(req: EnhancedRequest, res: express.Response) {
-    if (!req.auth) {
-        attach(req, res, () => {
-            console.log('test')
-        })
-    }
-
     const userJson = {
         expires: req.auth.expires,
         roles: req.auth.roles,
