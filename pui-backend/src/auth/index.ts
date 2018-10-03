@@ -28,27 +28,28 @@ export async function attach(req: EnhancedRequest, res: express.Response, next: 
 
     if (!session.auth) {
         next()
-    }
-    const userId = session.auth.userId
-    const jwt = session.auth.token
-    const roles = session.auth.roles
-
-    const jwtData = jwtDecode(jwt)
-    const expires = new Date(jwtData.exp).getTime()
-    const now = new Date().getTime() / 1000
-    const expired = expires < now
-
-    logger.info('Attaching auth')
-
-    if (expired) {
-        res.status(401).send('Token expired!')
     } else {
-        req.auth = jwtData
-        req.auth.token = jwt
-        req.auth.userId = userId
-        req.auth.expires = expires
-        req.auth.roles = roles
-        next()
+        const userId = session.auth.userId
+        const jwt = session.auth.token
+        const roles = session.auth.roles
+
+        const jwtData = jwtDecode(jwt)
+        const expires = new Date(jwtData.exp).getTime()
+        const now = new Date().getTime() / 1000
+        const expired = expires < now
+
+        logger.info('Attaching auth')
+
+        if (expired) {
+            res.status(401).send('Token expired!')
+        } else {
+            req.auth = jwtData
+            req.auth.token = jwt
+            req.auth.userId = userId
+            req.auth.expires = expires
+            req.auth.roles = roles
+            next()
+        }
     }
 }
 
