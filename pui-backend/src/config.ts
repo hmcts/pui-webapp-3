@@ -7,7 +7,6 @@ export const config = {
     },
     cookies: {
         token: '__auth__',
-        userId: '__userid__',
     },
     idam: {
         idamApiUrl: 'https://preprod-idamapi.reform.hmcts.net:3511',

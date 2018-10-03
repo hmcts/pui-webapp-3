@@ -17,6 +17,8 @@ const http = axios.create({
 })
 
 export async function attach(req: EnhancedRequest, res: express.Response, next: express.NextFunction) {
+    const session = req.session!
+
     try {
         const token = await serviceTokenGenerator()
         req.headers.ServiceAuthorization = token.token
@@ -24,8 +26,10 @@ export async function attach(req: EnhancedRequest, res: express.Response, next: 
         logger.error('Could not add S2S token header')
     }
 
-    const userId = req.headers[config.cookies.userId] || req.cookies[config.cookies.userId]
-    const jwt = req.headers.authorization || req.cookies[config.cookies.token]
+    const userId = session.auth.userId
+    const jwt = session.auth.token
+    const roles = session.auth.roles
+
     const jwtData = jwtDecode(jwt)
     const expires = new Date(jwtData.exp).getTime()
     const now = new Date().getTime() / 1000
@@ -39,6 +43,8 @@ export async function attach(req: EnhancedRequest, res: express.Response, next: 
         req.auth = jwtData
         req.auth.token = jwt
         req.auth.userId = userId
+        req.auth.expires = expires
+        req.auth.roles = roles
         next()
     }
 }
@@ -72,20 +78,38 @@ export async function getUserDetails(jwt: string): Promise<AxiosResponse> {
 }
 
 export async function oauth(req: express.Request, res: express.Response, next: express.NextFunction) {
+    const session = req.session!
+
     try {
         const response = await getTokenFromCode(req, res)
 
         if (response.data.access_token) {
             const details: any = await getUserDetails(response.data.access_token)
-            logger.info(details.data)
             res.cookie(config.cookies.token, response.data.access_token)
-            res.cookie(config.cookies.userId, details.data.id)
-            res.redirect(config.indexUrl)
+            session.auth = {
+                roles: details.data.roles,
+                token: response.data.access_token,
+                userId: details.data.id,
+            }
+
+            session.save(() => {
+                res.redirect(config.indexUrl)
+            })
         }
     } catch (e) {
         logger.error('Error:', e)
         res.redirect(config.indexUrl || '/')
     }
+}
+
+export function user(req: EnhancedRequest, res: express.Response) {
+    const userJson = {
+        expires: req.auth.expires,
+        roles: req.auth.roles,
+        userId: req.auth.userId,
+    }
+    res.setHeader('Content-Type', 'application/json')
+    res.send(JSON.stringify(userJson))
 }
 
 // export function storeUrl(req: express.Request, res: express.Response, next: express.NextFunction) {
