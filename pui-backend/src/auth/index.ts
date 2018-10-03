@@ -107,6 +107,12 @@ export async function oauth(req: express.Request, res: express.Response, next: e
 }
 
 export function user(req: EnhancedRequest, res: express.Response) {
+    if (!req.auth) {
+        attach(req, res, () => {
+            console.log('test')
+        })
+    }
+
     const userJson = {
         expires: req.auth.expires,
         roles: req.auth.roles,
