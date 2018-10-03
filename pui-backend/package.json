@@ -6,7 +6,7 @@
     "scripts": {
         "build": "npx tsc ",
         "start": "cd dist && node server.js",
-        "watch": "nodemon --watch 'src/**/*.ts' --exec 'npx ts-node' src/server.ts"
+        "watch": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/server.ts"
     },
     "author": "",
     "license": "ISC",
