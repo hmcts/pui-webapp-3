@@ -26,6 +26,9 @@ export async function attach(req: EnhancedRequest, res: express.Response, next: 
         logger.error('Could not add S2S token header')
     }
 
+    if (!session.auth) {
+        next()
+    }
     const userId = session.auth.userId
     const jwt = session.auth.token
     const roles = session.auth.roles

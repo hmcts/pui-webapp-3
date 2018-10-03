@@ -12,6 +12,7 @@ import { catchError } from 'rxjs/operators'
 
 @Injectable()
 export class CaseService {
+    user
     constructor(
         private httpClient: HttpClient // private configService: ConfigService
     ) {}

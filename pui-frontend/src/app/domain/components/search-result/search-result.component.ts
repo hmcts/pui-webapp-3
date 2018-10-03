@@ -1,3 +1,5 @@
+import { AuthService } from './../../../auth/auth.service'
+
 import { Component, OnInit } from '@angular/core'
 import { CaseService } from '../../services/case.service'
 
@@ -9,11 +11,13 @@ import { CaseService } from '../../services/case.service'
 export class SearchResultComponent implements OnInit {
     data$: Object
     error: string
+    user: Object
 
-    constructor(private caseService: CaseService) {}
+    constructor(private caseService: CaseService, private auth: AuthService) {}
 
     ngOnInit() {
         this.data$ = this.caseService.search()
-        console.log(this.data$)
+        this.user = this.caseService.user
+        this.auth.getUser().subscribe(user => (this.user = user))
     }
 }
