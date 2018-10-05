@@ -33,4 +33,4 @@ const routes: Routes = [
     providers: [],
     exports: [RouterModule]
 })
-export class RoutingModule {}
+export class RoutingModule { }

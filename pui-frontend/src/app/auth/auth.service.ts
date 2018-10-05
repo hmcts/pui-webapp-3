@@ -6,9 +6,11 @@ import { environment as config } from '../../environments/environment'
 import { Router } from '@angular/router'
 
 import { Observable } from 'rxjs/Observable'
-import 'rxjs/add/observable/of'
-import 'rxjs/add/operator/share'
+
+//import 'rxjs/add/observable/of'
+//import 'rxjs/add/operator/share'
 import 'rxjs/add/operator/map'
+import { of } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -73,7 +75,11 @@ export class AuthService {
             this.user = this.httpCilent.get('/api/user').map(response => {
                 return response
             })
+            //mock it while idam is down
+            //this.user = of({ roles: ['caseworker-probatex', 'xadmin'] })
             return this.user
+
+
         }
     }
 

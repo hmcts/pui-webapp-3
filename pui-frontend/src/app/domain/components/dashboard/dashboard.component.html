@@ -1,6 +1,13 @@
 <div class="jui-width-container">
   <main id="content" role="main" class="govuk-main-wrapper">
       <h1 class="govuk-heading-xl">Dashboard</h1>
-      <app-search-result></app-search-result>
+      
+      <ul>
+        <li>one</li>
+        <li *roleAccess="'admin,caseworker-probate'">two</li>
+        <li>three</li>
+      </ul>
+      <app-search-result *roleAccess="'caseworker-probatex'" ></app-search-result>
   </main>
 </div>
+

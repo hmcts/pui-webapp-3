@@ -17,11 +17,15 @@ import { HmctsModule } from '../hmcts/hmcts.module'
 import { CaseService } from './services/case.service'
 import { SearchResultComponent } from './components/search-result/search-result.component'
 import { HttpClientModule } from '@angular/common/http'
+import { RolesDirective } from '../shared/directives/roles.directive';
+
+
+
 
 @NgModule({
     imports: [CommonModule, RouterModule, ReactiveFormsModule, HmctsModule, SharedModule, HttpClientModule],
-    exports: [HeaderComponent, SearchResultComponent],
+    exports: [HeaderComponent, SearchResultComponent, RolesDirective],
     declarations: [HeaderComponent, SearchResultComponent],
     providers: [CaseService]
 })
-export class DomainModule {}
+export class DomainModule { }

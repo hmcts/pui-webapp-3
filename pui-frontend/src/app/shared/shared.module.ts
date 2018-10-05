@@ -7,7 +7,9 @@ import { ReactiveFormsModule } from '@angular/forms'
 import { HmctsModule } from '../hmcts/hmcts.module'
 
 import { FooterComponent } from './components/footer/footer.component'
-import { TableComponent } from './components/table/table.component'
+import { TableComponent } from './components/table/table.component';
+import { RolesDirective } from './directives/roles.directive';
+
 
 @NgModule({
     imports: [
@@ -19,7 +21,7 @@ import { TableComponent } from './components/table/table.component'
         // GovukModule,
         HmctsModule
     ],
-    declarations: [FooterComponent, TableComponent],
-    exports: [FooterComponent, TableComponent]
+    declarations: [FooterComponent, TableComponent, RolesDirective],
+    exports: [FooterComponent, TableComponent, RolesDirective]
 })
-export class SharedModule {}
+export class SharedModule { }

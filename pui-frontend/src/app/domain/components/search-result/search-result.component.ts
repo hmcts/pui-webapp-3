@@ -13,11 +13,16 @@ export class SearchResultComponent implements OnInit {
     error: string
     user: Object
 
-    constructor(private caseService: CaseService, private auth: AuthService) {}
+    constructor(private caseService: CaseService, private auth: AuthService) { }
 
     ngOnInit() {
         this.data$ = this.caseService.search()
-        this.user = this.caseService.user
-        this.auth.getUser().subscribe(user => (this.user = user))
+        //this.user = this.caseService.user
+        // this.auth.getUser().subscribe(user => (this.user = user))
+
+        this.auth.getUser().subscribe(user => {
+            this.user = user
+            console.log(this.user)
+        })
     }
 }

@@ -7,6 +7,8 @@ import { DomainModule } from './domain/domain.module'
 import { HmctsModule } from './hmcts/hmcts.module'
 import { RoutingModule } from './routing/routing.module'
 import { SharedModule } from './shared/shared.module'
+import { RolesDirective } from './shared/directives/roles.directive';
+
 
 @NgModule({
     declarations: [AppComponent],
@@ -14,4 +16,4 @@ import { SharedModule } from './shared/shared.module'
     providers: [],
     bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }
