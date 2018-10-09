@@ -3,14 +3,15 @@ import { Inject, Injectable } from '@angular/core'
 import { CookieService } from 'ngx-cookie'
 import * as jwtDecode from 'jwt-decode'
 import { environment as config } from '../../environments/environment'
-import { Router } from '@angular/router'
+import { Router, ActivatedRouteSnapshot } from '@angular/router'
 
 import { Observable } from 'rxjs/Observable'
 
 //import 'rxjs/add/observable/of'
 //import 'rxjs/add/operator/share'
 import 'rxjs/add/operator/map'
-import { of } from 'rxjs';
+import { of, from } from 'rxjs';
+
 
 @Injectable({
     providedIn: 'root'
@@ -31,14 +32,19 @@ export class AuthService {
         this.user = null
     }
 
-    async canActivate() {
-        console.log('reached can activate')
+    async canActivate(route: ActivatedRouteSnapshot) {
+
+        let guardRoles = route.data["roles"] as Array<string>
+
         if (!this.isAuthenticated()) {
             this.loginRedirect()
-            return false
+            return false //false
         }
 
-        return true
+        let ifRoleAuth = await this.isRoleAuthorised(guardRoles)
+        console.log('canActivateRoute ifRoleAuth: ', ifRoleAuth)
+        return ifRoleAuth;
+
     }
 
     generateLoginUrl() {
@@ -93,4 +99,17 @@ export class AuthService {
         // do stuff!!
         return !expired
     }
+
+
+
+
+    isRoleAuthorised(guardRoles: string[]) {
+        return this.getUser().toPromise().then(user => {
+            let roleExists = user.roles.some(r => guardRoles.includes(r))
+            return roleExists;
+        })
+
+    }
+
+
 }

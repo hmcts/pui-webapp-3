@@ -15,7 +15,8 @@ const routes: Routes = [
     {
         path: '',
         component: DashboardComponent,
-        canActivate: [AuthService]
+        canActivate: [AuthService],
+        data: { roles: ['caseworker-probatex'] }
     }
 ]
 
