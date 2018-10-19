@@ -20,7 +20,7 @@ async function getCases(userId: string): Promise<Case[][]> {
         logger.info('Getting cases for ', jurisdiction.jur)
         const response = await http.get(
             `${config.ccd.dataApi}/caseworkers/${userId}/jurisdictions/${jurisdiction.jur}/case-types/${
-                jurisdiction.caseType
+            jurisdiction.caseType
             }/cases?sortDirection=DESC${jurisdiction.filter}`
         )
 
