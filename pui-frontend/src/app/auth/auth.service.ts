@@ -7,8 +7,6 @@ import { Router, ActivatedRouteSnapshot } from '@angular/router'
 
 import { Observable } from 'rxjs/Observable'
 
-//import 'rxjs/add/observable/of'
-//import 'rxjs/add/operator/share'
 import 'rxjs/add/operator/map'
 import { of, from } from 'rxjs';
 
@@ -44,7 +42,7 @@ export class AuthService {
         // let ifRoleAuth = await this.isRoleAuthorised(guardRoles)
         // console.log('canActivateRoute ifRoleAuth: ', ifRoleAuth)
         // return ifRoleAuth;
-
+        return true
     }
 
     generateLoginUrl() {
