@@ -41,9 +41,9 @@ export class AuthService {
             return false //false
         }
 
-        let ifRoleAuth = await this.isRoleAuthorised(guardRoles)
-        console.log('canActivateRoute ifRoleAuth: ', ifRoleAuth)
-        return ifRoleAuth;
+        // let ifRoleAuth = await this.isRoleAuthorised(guardRoles)
+        // console.log('canActivateRoute ifRoleAuth: ', ifRoleAuth)
+        // return ifRoleAuth;
 
     }
 

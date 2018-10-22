@@ -2,12 +2,20 @@
   <main id="content" role="main" class="govuk-main-wrapper">
       <h1 class="govuk-heading-xl">Dashboard</h1>
       
-      <ul>
-        <li>one</li>
-        <li *roleAccess="'admin,caseworker-probate'">two</li>
+      <!-- <ul>
+        <li *roleAccess="'admin,caseworker-probatex'">one</li>
+        <li>two</li>
         <li>three</li>
       </ul>
-      <app-search-result *roleAccess="'caseworker-probate'" ></app-search-result>
+
+      <a unlessRole="caseworker-probatex,caseworker-divorcex" routerLink="/purple" >purple</a> |<br>
+      <a unlessRole="caseworker-probatex,caseworker-divorcex" routerLink="/red" routerLinkActive="disabled">Red</a> |<br>
+      <a  unlessRole="caseworker-probatex,caseworker-divorcex" href='http://www.google.co.uk' >This is a link</a><br>
+      <button  unlessRole="caseworker-probatex,caseworker-divorcex">Button text</button> -->
+     
+      <!-- <app-search-result *roleAccess="'caseworker-probate'" ></app-search-result> -->
+      <app-search-result ></app-search-result>
+
   </main>
 </div>
 

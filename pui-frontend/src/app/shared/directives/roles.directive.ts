@@ -22,10 +22,8 @@ export class RolesDirective implements OnInit {
 
   ngOnInit() {
     let authorised
-    console.log('reached role directive')
     this.auth.getUser().subscribe(user => {
       this.user = user
-      console.log('from api:', this.user.roles)
       authorised = this.checkRoleisValid();
       if (authorised)
         this.viewContainerRef.createEmbeddedView(this.templateRef);

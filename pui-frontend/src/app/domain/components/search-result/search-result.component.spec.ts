@@ -4,9 +4,9 @@ import { SearchResultComponent } from './search-result.component';
 import { SharedModule } from '../../../shared/shared.module';
 import { DomainModule } from '../../domain.module';
 import { CaseService } from '../../services/case.service';
-import { Selector } from '../../../../../test/selector-helper';
+//import { Selector } from '../../../../../test/selector-helper';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { ConfigService } from '../../../config.service';
+//import { ConfigService } from '../../../config.service';
 import { BrowserTransferStateModule, StateKey } from '@angular/platform-browser';
 import { makeStateKey, TransferState } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
@@ -77,7 +77,7 @@ describe('SearchResultComponent', () => {
                 }
             ]
         })
-               .compileComponents();
+            .compileComponents();
     }));
 
     describe('when there is no data in the transfer state', () => {
@@ -106,9 +106,9 @@ describe('SearchResultComponent', () => {
 
             beforeEach(async(() => {
                 fixture.whenStable()
-                       .then(() => {
-                           fixture.detectChanges();
-                       });
+                    .then(() => {
+                        fixture.detectChanges();
+                    });
             }));
 
             it('should have zero rows', () => {
@@ -134,9 +134,9 @@ describe('SearchResultComponent', () => {
 
             beforeEach(async(() => {
                 fixture.whenStable()
-                       .then(() => {
-                           fixture.detectChanges();
-                       });
+                    .then(() => {
+                        fixture.detectChanges();
+                    });
             }));
 
             it('should have zero rows', () => {
@@ -175,9 +175,9 @@ describe('SearchResultComponent', () => {
 
             beforeEach(async(() => {
                 fixture.whenStable()
-                       .then(() => {
-                           fixture.detectChanges();
-                       });
+                    .then(() => {
+                        fixture.detectChanges();
+                    });
             }));
 
             it('should have some rows', () => {

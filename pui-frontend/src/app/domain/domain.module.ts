@@ -18,13 +18,14 @@ import { CaseService } from './services/case.service'
 import { SearchResultComponent } from './components/search-result/search-result.component'
 import { HttpClientModule } from '@angular/common/http'
 import { RolesDirective } from '../shared/directives/roles.directive';
+import { UnlessRoleIncludesDirective } from '../shared/directives/unless-role-includes.directive';
 
 
 
 
 @NgModule({
     imports: [CommonModule, RouterModule, ReactiveFormsModule, HmctsModule, SharedModule, HttpClientModule],
-    exports: [HeaderComponent, SearchResultComponent, RolesDirective],
+    exports: [HeaderComponent, SearchResultComponent, RolesDirective, UnlessRoleIncludesDirective],
     declarations: [HeaderComponent, SearchResultComponent],
     providers: [CaseService]
 })

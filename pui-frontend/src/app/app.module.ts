@@ -7,12 +7,13 @@ import { DomainModule } from './domain/domain.module'
 import { HmctsModule } from './hmcts/hmcts.module'
 import { RoutingModule } from './routing/routing.module'
 import { SharedModule } from './shared/shared.module'
-import { RolesDirective } from './shared/directives/roles.directive';
+//import { RolesDirective } from './shared/directives/roles.directive';
+import { GovukModule } from './govuk/govuk.module';
 
 
 @NgModule({
     declarations: [AppComponent],
-    imports: [BrowserModule, RoutingModule, AuthModule, DomainModule, HmctsModule, SharedModule],
+    imports: [BrowserModule, GovukModule, RoutingModule, AuthModule, DomainModule, HmctsModule, SharedModule],
     providers: [],
     bootstrap: [AppComponent]
 })
