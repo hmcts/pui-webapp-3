@@ -60,3 +60,15 @@ export class Case {
         this.state = res.state
     }
 }
+
+export class CaseData {
+    applicantFMName?: string
+    applicantLName?: string
+    appRespondentFMName?: string
+    appRespondentLName?: string
+    D8PetitionerFirstName?: string
+    D8PetitionerLastName?: string
+    deceasedForenames?: string
+    deceasedSurname?: string
+    // appeal?: Appeal
+}
