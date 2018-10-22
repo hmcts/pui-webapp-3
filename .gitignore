@@ -12,3 +12,5 @@ pui-backend/.sessions/*
 .history
 .directory
 .package-lock.json
+!.idea/
+.idea
