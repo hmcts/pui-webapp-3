@@ -30,7 +30,6 @@ export interface SimpleCase {
 
 export class Case {
     static create(res: any) {
-        console.log(res)
         return new Case(res)
     }
 

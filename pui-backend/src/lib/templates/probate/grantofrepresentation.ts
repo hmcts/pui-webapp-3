@@ -3,13 +3,13 @@ export default {
     columns: [
         {
             label: 'Case Reference',
-            case_field_id: 'case_ref',
+            case_field_id: 'caseRef',
             value: '$.id',
         },
         {
             label: 'Parties',
             case_field_id: 'parties',
-            value: ['$.case_data.deceasedForenames', ' ', '$.case_data.deceasedSurname'],
+            value: ['$.caseData.deceasedForenames', ' ', '$.caseData.deceasedSurname'],
         },
         {
             label: 'Type',
@@ -30,7 +30,7 @@ export default {
         {
             label: 'Date of Last Action',
             case_field_id: 'lastModified',
-            value: '$.last_modified',
+            value: '$.lastModified',
             date_format: 'd MMM yyyy',
         },
     ],

@@ -17,7 +17,7 @@ export class SearchResultComponent implements OnInit {
 
     ngOnInit() {
         this.data$ = this.caseService.search()
-        //this.user = this.caseService.user
+        // his.user = this.caseService.user
         // this.auth.getUser().subscribe(user => (this.user = user))
 
         this.auth.getUser().subscribe(user => {

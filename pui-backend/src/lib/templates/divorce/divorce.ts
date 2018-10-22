@@ -3,22 +3,22 @@ export default {
     columns: [
         {
             label: 'Case Reference',
-            case_field_id: 'case_ref',
+            case_field_id: 'caseRef',
             value: '$.id',
         },
         {
             label: 'Parties',
             case_field_id: 'parties',
             value: [
-                '$.case_data.D8PetitionerFirstName',
+                '$.caseData.D8PetitionerFirstName',
                 ' ',
-                '$.case_data.D8PetitionerLastName',
+                '$.caseData.D8PetitionerLastName',
                 ' ',
                 'v',
                 ' ',
-                '$.case_data.D8RespondentFirstName',
+                '$.caseData.D8RespondentFirstName',
                 ' ',
-                '$.case_data.D8RespondentLastName',
+                '$.caseData.D8RespondentLastName',
             ],
         },
         {
@@ -34,13 +34,13 @@ export default {
         {
             label: 'Case Start Date',
             case_field_id: 'createdDate',
-            value: '$.created_date',
+            value: '$.createdDate',
             date_format: 'd MMM yyyy',
         },
         {
             label: 'Date of Last Action',
             case_field_id: 'lastModified',
-            value: '$.last_modified',
+            value: '$.lastModified',
             date_format: 'd MMM yyyy',
         },
     ],

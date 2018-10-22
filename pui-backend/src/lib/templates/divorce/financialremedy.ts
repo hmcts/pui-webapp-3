@@ -3,22 +3,22 @@ export default {
     columns: [
         {
             label: 'Case Reference',
-            case_field_id: 'case_ref',
+            case_field_id: 'caseRef',
             value: '$.id',
         },
         {
             label: 'Parties',
             case_field_id: 'parties',
             value: [
-                '$.case_data.applicantFMName',
+                '$.caseData.applicantFMName',
                 ' ',
-                '$.case_data.applicantLName',
+                '$.caseData.applicantLName',
                 ' ',
                 'v',
                 ' ',
-                '$.case_data.appRespondentFMName',
+                '$.caseData.appRespondentFMName',
                 ' ',
-                '$.case_data.appRespondentLName',
+                '$.caseData.appRespondentLName',
             ],
         },
         {
@@ -34,13 +34,13 @@ export default {
         {
             label: 'Case Start Date',
             case_field_id: 'createdDate',
-            value: '$.created_date',
+            value: '$.createdDate',
             date_format: 'd MMM yyyy',
         },
         {
             label: 'Date of Last Action',
             case_field_id: 'lastModified',
-            value: '$.last_modified',
+            value: '$.lastModified',
             date_format: 'd MMM yyyy',
         },
     ],

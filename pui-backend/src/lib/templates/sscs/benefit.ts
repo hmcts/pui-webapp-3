@@ -3,16 +3,16 @@ export default {
     columns: [
         {
             label: 'Case Reference',
-            case_field_id: 'case_ref',
-            value: '$.case_data.caseReference',
+            case_field_id: 'caseRef',
+            value: '$.caseData.caseReference',
         },
         {
             label: 'Parties',
             case_field_id: 'parties',
             value: [
-                '$.case_data.appeal.appellant.name.firstName',
+                '$.caseData.appeal.appellant.name.firstName',
                 ' ',
-                '$.case_data.appeal.appellant.name.lastName',
+                '$.caseData.appeal.appellant.name.lastName',
                 ' ',
                 'v',
                 ' ',
@@ -22,7 +22,7 @@ export default {
         {
             label: 'Type',
             case_field_id: 'type',
-            value: '$.case_data.appeal.benefitType.code',
+            value: '$.caseData.appeal.benefitType.code',
         },
         {
             label: 'Decision needed on',

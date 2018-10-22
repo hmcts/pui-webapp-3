@@ -15,7 +15,7 @@ export class CaseService {
     user
     constructor(
         private httpClient: HttpClient // private configService: ConfigService
-    ) {}
+    ) { }
 
     // fetch(caseId, jurisdiction, casetype): Observable<Object> {
     //     const url = `${this.configService.config.api_base_url}/api/cases/jurisdiction/${jurisdiction}/casetype/${casetype}/${caseId}`;
@@ -32,7 +32,7 @@ export class CaseService {
 
     search(): Observable<Object> {
         const url = `/api/cases`
-
+        console.log('search')
         return this.httpClient
             .get(url)
             .pipe(

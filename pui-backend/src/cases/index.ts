@@ -18,6 +18,7 @@ const CORJuristiction = 'SSCS'
 async function getCases(userId: string): Promise<Case[][]> {
     const collection: Case[][] = await map(config.jurisdictions, async jurisdiction => {
         logger.info('Getting cases for ', jurisdiction.jur)
+
         const response = await http.get(
             `${config.ccd.dataApi}/caseworkers/${userId}/jurisdictions/${jurisdiction.jur}/case-types/${
             jurisdiction.caseType
@@ -67,6 +68,7 @@ function rawCasesReducer(caseList: Case[], columns) {
     return caseList.map(caseRow => {
         return {
             caseFields: columns.reduce((row, column) => {
+                // console.log(column.case_field_id, ':', column.value)
                 row[column.case_field_id] = process(column.value, caseRow)
                 return row
             }, {}),
@@ -87,8 +89,12 @@ async function processCaseList(caseList: Case[]): Promise<SimpleCase[]> {
         const caseType = casesData[0].caseTypeId
         logger.info(`Getting template ${jurisdiction}, ${caseType}`)
         const template = templates(jurisdiction, caseType).default
-        results = rawCasesReducer(casesData, template.columns).filter(row => !!row.caseFields.caseRef)
-        console.log(results)
+
+        const test = rawCasesReducer(casesData, template.columns)
+        console.log(test[0].caseFields)
+        results = rawCasesReducer(casesData, template.columns).filter(row => {
+            return Boolean(row.caseFields.caseRef)
+        })
     }
 
     return results
@@ -108,6 +114,7 @@ function asyncReturnOrError(promise: Promise<any>, message: string, res: express
         .catch(err => {
             logger.error('Error getting cases')
             res.status(err.statusCode || 500).send(err)
+            return null
         })
 }
 
@@ -129,7 +136,7 @@ export async function get(req: EnhancedRequest, res: express.Response, next: exp
     if (caseLists) {
         logger.info('Processing cases ', caseLists.length)
 
-        let [err, results] = await asyncReturnOrError(
+        let results = await asyncReturnOrError(
             map(caseLists, async (caseList: Case[]) => {
                 return await processCaseList(caseList)
             }),
