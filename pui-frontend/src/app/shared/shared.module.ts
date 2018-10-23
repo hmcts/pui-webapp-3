@@ -8,8 +8,7 @@ import { HmctsModule } from '../hmcts/hmcts.module'
 
 import { FooterComponent } from './components/footer/footer.component'
 import { TableComponent } from './components/table/table.component';
-import { RolesDirective } from './directives/roles.directive';
-import { UnlessRoleIncludesDirective } from './directives/unless-role-includes.directive';
+
 
 
 @NgModule({
@@ -22,7 +21,7 @@ import { UnlessRoleIncludesDirective } from './directives/unless-role-includes.d
         // GovukModule,
         HmctsModule
     ],
-    declarations: [FooterComponent, TableComponent, RolesDirective, UnlessRoleIncludesDirective],
-    exports: [FooterComponent, TableComponent, RolesDirective, UnlessRoleIncludesDirective]
+    declarations: [FooterComponent, TableComponent],
+    exports: [FooterComponent, TableComponent]
 })
 export class SharedModule { }
