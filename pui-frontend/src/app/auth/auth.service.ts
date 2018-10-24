@@ -8,8 +8,7 @@ import { Router, ActivatedRouteSnapshot } from '@angular/router'
 import { Observable } from 'rxjs/Observable'
 
 import 'rxjs/add/operator/map'
-import { of, from } from 'rxjs';
-
+import { of, from } from 'rxjs'
 
 @Injectable({
     providedIn: 'root'
@@ -31,8 +30,7 @@ export class AuthService {
     }
 
     async canActivate(route: ActivatedRouteSnapshot) {
-
-        let guardRoles = route.data["roles"] as Array<string>
+        let guardRoles = route.data['roles'] as Array<string>
 
         if (!this.isAuthenticated()) {
             this.loginRedirect()
@@ -82,8 +80,6 @@ export class AuthService {
             //mock it while idam is down
             //this.user = of({ roles: ['caseworker-probatex', 'xadmin'] })
             return this.user
-
-
         }
     }
 
@@ -93,21 +89,17 @@ export class AuthService {
             return false
         }
         const jwtData = this.decodeJwt(jwt)
-        const expired = jwtData.exp > new Date().getTime()
+        const notExpired = jwtData.exp > Math.round(new Date().getTime() / 1000)
         // do stuff!!
-        return !expired
+        return notExpired
     }
-
-
-
 
     isRoleAuthorised(guardRoles: string[]) {
-        return this.getUser().toPromise().then(user => {
-            let roleExists = user.roles.some(r => guardRoles.includes(r))
-            return roleExists;
-        })
-
+        return this.getUser()
+            .toPromise()
+            .then(user => {
+                let roleExists = user.roles.some(r => guardRoles.includes(r))
+                return roleExists
+            })
     }
-
-
 }

@@ -29,11 +29,11 @@ export interface SimpleCase {
 }
 
 export class Case {
-    static create(res: any) {
-        return new Case(res)
+    static create(caseData: any) {
+        return new Case(caseData)
     }
 
-    caseData: any
+    caseData: CaseData
     caseFields: CaseFields
     caseTypeId: string
     createDate: Date
@@ -47,21 +47,25 @@ export class Case {
     seccurityClassifications: any
     state: any
 
-    constructor(res) {
-        this.id = res.id
-        this.jurisdiction = res.jurisdiction
-        this.caseTypeId = res.case_type_id
-        this.createDate = res.created_date
-        this.lastModified = res.last_modified
-        this.securityClassification = res.security_classification
-        this.caseData = res.case_data
-        this.dataClassification = res.data_classification
-        this.securityClassification = res.security_classification
-        this.state = res.state
+    constructor(caseData) {
+        this.id = caseData.id
+        this.jurisdiction = caseData.jurisdiction
+        this.caseTypeId = caseData.case_type_id
+        this.createDate = caseData.created_date
+        this.lastModified = caseData.last_modified
+        this.securityClassification = caseData.security_classification
+        this.caseData = CaseData.create(caseData.case_data)
+        this.dataClassification = caseData.data_classification
+        this.securityClassification = caseData.security_classification
+        this.state = caseData.state
     }
 }
 
 export class CaseData {
+    static create(caseData: any) {
+        return new CaseData(caseData)
+    }
+
     applicantFMName?: string
     applicantLName?: string
     appRespondentFMName?: string
@@ -70,5 +74,19 @@ export class CaseData {
     D8PetitionerLastName?: string
     deceasedForenames?: string
     deceasedSurname?: string
-    // appeal?: Appeal
+    appeal: any
+    defendants: any
+
+    constructor(caseData) {
+        this.applicantFMName = caseData.applicantFMName
+        this.applicantLName = caseData.applicantLName
+        this.appRespondentFMName = caseData.appRespondentLName
+        this.appRespondentLName = caseData.appRespondentLName
+        this.D8PetitionerFirstName = caseData.D8PetitionerFirstName
+        this.D8PetitionerLastName = caseData.D8PetitionerLastName
+        this.deceasedForenames = caseData.deceasedForenames
+        this.deceasedSurname = caseData.deceasedSurname
+        this.appeal = caseData.appeal
+        this.defendants = caseData.defendants
+    }
 }
