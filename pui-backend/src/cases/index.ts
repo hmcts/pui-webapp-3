@@ -21,7 +21,7 @@ async function getCases(userId: string): Promise<Case[][]> {
 
         const response = await http.get(
             `${config.ccd.dataApi}/caseworkers/${userId}/jurisdictions/${jurisdiction.jur}/case-types/${
-            jurisdiction.caseType
+                jurisdiction.caseType
             }/cases?sortDirection=DESC${jurisdiction.filter}`
         )
 
@@ -89,9 +89,6 @@ async function processCaseList(caseList: Case[]): Promise<SimpleCase[]> {
         const caseType = casesData[0].caseTypeId
         logger.info(`Getting template ${jurisdiction}, ${caseType}`)
         const template = templates(jurisdiction, caseType).default
-
-        const test = rawCasesReducer(casesData, template.columns)
-        console.log(test[0].caseFields)
         results = rawCasesReducer(casesData, template.columns).filter(row => {
             return Boolean(row.caseFields.caseRef)
         })
@@ -112,10 +109,21 @@ function asyncReturnOrError(promise: Promise<any>, message: string, res: express
             return data
         })
         .catch(err => {
-            logger.error('Error getting cases')
+            logger.error(message)
             res.status(err.statusCode || 500).send(err)
             return null
         })
+}
+
+export function tidyTemplate(template: any) {
+    return {
+        columns: template.columns.map(column => {
+            return {
+                case_field_id: column.case_field_id,
+                label: column.label,
+            }
+        }),
+    }
 }
 
 export async function get(req: EnhancedRequest, res: express.Response, next: express.NextFunction) {
@@ -145,8 +153,8 @@ export async function get(req: EnhancedRequest, res: express.Response, next: exp
         )
 
         results = [].concat(...results).sort(sortResults)
-
-        const aggregatedData = { ...sscsCaseListTemplate.default, results }
+        console.log(tidyTemplate(sscsCaseListTemplate.default))
+        const aggregatedData = { ...tidyTemplate(sscsCaseListTemplate.default), results }
         res.setHeader('Access-Control-Allow-Origin', '*')
         res.setHeader('content-type', 'application/json')
         res.status(200).send(JSON.stringify(aggregatedData))

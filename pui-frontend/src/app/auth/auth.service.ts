@@ -3,12 +3,12 @@ import { Inject, Injectable } from '@angular/core'
 import { CookieService } from 'ngx-cookie'
 import * as jwtDecode from 'jwt-decode'
 import { environment as config } from '../../environments/environment'
-import { Router, ActivatedRouteSnapshot } from '@angular/router'
+import { Router } from '@angular/router'
 
 import { Observable } from 'rxjs/Observable'
-
+import 'rxjs/add/observable/of'
+import 'rxjs/add/operator/share'
 import 'rxjs/add/operator/map'
-import { of, from } from 'rxjs'
 
 @Injectable({
     providedIn: 'root'
@@ -29,17 +29,13 @@ export class AuthService {
         this.user = null
     }
 
-    async canActivate(route: ActivatedRouteSnapshot) {
-        let guardRoles = route.data['roles'] as Array<string>
-
+    async canActivate() {
+        console.log('reached can activate')
         if (!this.isAuthenticated()) {
             this.loginRedirect()
-            return false //false
+            return false
         }
 
-        // let ifRoleAuth = await this.isRoleAuthorised(guardRoles)
-        // console.log('canActivateRoute ifRoleAuth: ', ifRoleAuth)
-        // return ifRoleAuth;
         return true
     }
 
@@ -62,7 +58,6 @@ export class AuthService {
     }
 
     loginRedirect() {
-        console.log('Redirecting to ', this.generateLoginUrl())
         window.location.href = this.generateLoginUrl()
     }
 
@@ -77,8 +72,6 @@ export class AuthService {
             this.user = this.httpCilent.get('/api/user').map(response => {
                 return response
             })
-            //mock it while idam is down
-            //this.user = of({ roles: ['caseworker-probatex', 'xadmin'] })
             return this.user
         }
     }
@@ -92,14 +85,5 @@ export class AuthService {
         const notExpired = jwtData.exp > Math.round(new Date().getTime() / 1000)
         // do stuff!!
         return notExpired
-    }
-
-    isRoleAuthorised(guardRoles: string[]) {
-        return this.getUser()
-            .toPromise()
-            .then(user => {
-                let roleExists = user.roles.some(r => guardRoles.includes(r))
-                return roleExists
-            })
     }
 }
