@@ -9,11 +9,13 @@ import { RoutingModule } from './routing/routing.module'
 import { SharedModule } from './shared/shared.module'
 //import { RolesDirective } from './shared/directives/roles.directive';
 import { GovukModule } from './govuk/govuk.module';
+//import { HmctsrolesLibModule } from 'hmctsroles-lib';
 
 
 @NgModule({
     declarations: [AppComponent],
-    imports: [BrowserModule, GovukModule, RoutingModule, AuthModule, DomainModule, HmctsModule, SharedModule],
+    imports: [BrowserModule, GovukModule, RoutingModule, AuthModule, DomainModule, HmctsModule, SharedModule,
+    ],
     providers: [],
     bootstrap: [AppComponent]
 })

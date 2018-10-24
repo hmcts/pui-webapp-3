@@ -2,9 +2,19 @@
 
 <div data-selector="search-result">
 
+   
     
     <div *ngIf="data$ | async as data">
-            <!-- <div> {{data|json}} </div> -->
+    
+            <div>
+                <!-- <h1 [unlessRole]="'RoleX'"  roleList="RoleX,RoleY,RoleZ" roleSource="inline">Test unlessRole directive display if false</h1>
+                <h1 *roleAccess="['RoleA'];roleList:['RoleA','RoleB','RoleC'];roleSource:'inline'"  >Test roleAccess directive - display if true</h1>
+                -->
+
+                <!-- <h1 [unlessRole]="'caseworker-divorce-courtadmin'"  roleList="{{user.roles.join()}}" roleSource="inline">Test unlessRole directive display if false</h1>
+                <h1 *roleAccess="['caseworker-divorce-courtadmin'];roleList:user.roles;roleSource:'inline'"  >Test roleAccess directive - display if true</h1> -->
+                </div>
+
         <span class="govuk-heading-m">Your cases : (user : {{user.roles|json}} )</span>
         <app-table *ngIf="data.results && data.results.length; else noResultsOrError" [data]="data"></app-table>
         <ng-template #noResultsOrError>
