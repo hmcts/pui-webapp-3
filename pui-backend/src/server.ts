@@ -1,3 +1,4 @@
+import axios, { AxiosInstance } from 'axios'
 import * as cookieParser from 'cookie-parser'
 import * as express from 'express'
 import * as session from 'express-session'
@@ -13,6 +14,9 @@ import * as sessionFileStore from 'session-file-store'
 
 const app = express()
 const PORT = config.port
+
+//default content type for requests
+axios.defaults.headers.common['Content-Type'] = 'application/json'
 
 const logger = log4js.getLogger('server')
 logger.level = 'info'
@@ -59,8 +63,10 @@ app.use(cookieParser())
 app.get('/oauth2/callback', auth.oauth)
 
 app.use(auth.attach)
+
 app.get('/api/user', auth.user)
-app.get('/api/cases', cases.get)
+app.get('/api/cases', cases.list)
+app.get('/api/cases/:jur/:casetype/:case_id', cases.details)
 
 // Start !
 app.listen(PORT, () => {

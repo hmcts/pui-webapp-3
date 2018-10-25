@@ -1,10 +1,4 @@
 export const config = {
-    ccd: {
-        dataApi: 'https://ccd-data-store-api-aat.service.core-compute-aat.internal',
-    },
-    coh: {
-        corApi: 'http://coh-cor-aat.service.core-compute-aat.internal',
-    },
     cookies: {
         token: '__auth__',
     },
@@ -44,5 +38,13 @@ export const config = {
     },
     s2s: 'http://rpe-service-auth-provider-aat.service.core-compute-aat.internal',
     secureCookie: false, // this needs to be 'true' in prod and needs https encryption to be used
+    services: {
+        ccd: {
+            dataApi: 'https://ccd-data-store-api-aat.service.core-compute-aat.internal',
+        },
+        coh: {
+            corApi: 'http://coh-cor-aat.service.core-compute-aat.internal',
+        },
+    },
     sessionSecret: 's3cretSauc3',
 }

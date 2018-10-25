@@ -2,9 +2,11 @@ import axios, { AxiosInstance } from 'axios'
 import * as express from 'express'
 import * as log4js from 'log4js'
 import { map } from 'p-iteration'
+import * as striptags from 'striptags'
 import { config } from '../config'
 import { Case, EnhancedRequest, SimpleCase } from '../lib/model'
 import { process } from '../lib/processors'
+import * as ccd from '../lib/services/ccd'
 import { templates } from '../lib/templates'
 import * as sscsCaseListTemplate from '../lib/templates/sscs/benefit'
 
@@ -19,11 +21,7 @@ async function getCases(userId: string): Promise<Case[][]> {
     const collection: Case[][] = await map(config.jurisdictions, async jurisdiction => {
         logger.info('Getting cases for ', jurisdiction.jur)
 
-        const response = await http.get(
-            `${config.ccd.dataApi}/caseworkers/${userId}/jurisdictions/${jurisdiction.jur}/case-types/${
-                jurisdiction.caseType
-            }/cases?sortDirection=DESC${jurisdiction.filter}`
-        )
+        const response = await ccd.getCases(userId, jurisdiction)
 
         const caseList: Case[] = response.data.map(caseJson => Case.create(caseJson))
 
@@ -37,7 +35,7 @@ async function getCOR(casesData: Case[]) {
     const caseIds = casesData.map(caseRow => 'case_id=' + caseRow.id).join('&')
 
     if (casesData[0].jurisdiction === CORJuristiction) {
-        const hearings: any = await http.get(`${config.coh.corApi}/continuous-online-hearings/?${caseIds}`)
+        const hearings: any = await http.get(`${config.services.coh.corApi}/continuous-online-hearings/?${caseIds}`)
         if (hearings.online_hearings) {
             const caseStateMap = new Map(
                 hearings.online_hearings.map(hearing => [Number(hearing.case_id), hearing.current_state])
@@ -68,7 +66,6 @@ function rawCasesReducer(caseList: Case[], columns) {
     return caseList.map(caseRow => {
         return {
             caseFields: columns.reduce((row, column) => {
-                // console.log(column.case_field_id, ':', column.value)
                 row[column.case_field_id] = process(column.value, caseRow)
                 return row
             }, {}),
@@ -126,16 +123,24 @@ export function tidyTemplate(template: any) {
     }
 }
 
-export async function get(req: EnhancedRequest, res: express.Response, next: express.NextFunction) {
+export async function getCase(userId: string, jurisdiction: string, caseType: string, caseId: string) {
+    const caseData = ccd.getCase(userId, jurisdiction, caseType, caseId)
+    const events = ccd.getEvents(userId, jurisdiction)
+}
+
+export async function details(req: EnhancedRequest, res: express.Response, next: express.NextFunction) {
+    const caseData = await getCase(
+        striptags(req.auth.userId),
+        striptags(req.params.jur),
+        striptags(req.params.caseType),
+        striptags(req.params.caseId)
+    )
+}
+
+export async function list(req: EnhancedRequest, res: express.Response, next: express.NextFunction) {
     let caseLists: Case[][]
 
-    http = axios.create({
-        headers: {
-            Authorization: `Bearer ${req.auth.token}`,
-            'Content-Type': 'application/json',
-            ServiceAuthorization: req.headers.ServiceAuthorization,
-        },
-    })
+    http = axios.create({})
 
     logger.info('Getting cases')
 
@@ -153,7 +158,6 @@ export async function get(req: EnhancedRequest, res: express.Response, next: exp
         )
 
         results = [].concat(...results).sort(sortResults)
-        console.log(tidyTemplate(sscsCaseListTemplate.default))
         const aggregatedData = { ...tidyTemplate(sscsCaseListTemplate.default), results }
         res.setHeader('Access-Control-Allow-Origin', '*')
         res.setHeader('content-type', 'application/json')

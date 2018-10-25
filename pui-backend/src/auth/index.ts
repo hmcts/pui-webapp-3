@@ -45,6 +45,9 @@ export async function attach(req: EnhancedRequest, res: express.Response, next: 
         req.auth.userId = userId
         req.auth.expires = expires
         req.auth.roles = roles
+        // also use these as axios defaults
+        axios.defaults.headers.common.Authorization = `Bearer ${req.auth.token}`
+        axios.defaults.headers.common.ServiceAuthorization = req.headers.ServiceAuthorization
         next()
     }
 }
@@ -53,7 +56,6 @@ export async function getTokenFromCode(req: express.Request, res: express.Respon
     const Authorization = `Basic ${new Buffer(`${config.idam.idamClientID}:${secret}`).toString('base64')}`
     const options = {
         headers: {
-            Authorization,
             'Content-Type': 'application/x-www-form-urlencoded',
         },
     }
