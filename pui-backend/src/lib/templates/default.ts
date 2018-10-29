@@ -1,39 +1,81 @@
-/*tslint:disable */
 export default {
-    columns: [
+    details: {
+        fields: [{ value: '$.id' }, { value: '-' }],
+    },
+    sections: [
         {
-            label: 'Case Reference',
-            case_field_id: 'caseRef',
-            value: '$.id',
+            id: 'summary',
+            name: 'Summary',
+            type: 'page',
+            sections: [
+                {
+                    name: 'Summary',
+                    type: 'summary-panel',
+                    sections: [
+                        {
+                            name: 'Recent events',
+                            type: 'timeline',
+                            fields: [{ value: '$.events' }],
+                        },
+                        // {
+                        //     name: 'Action on',
+                        //     type: 'case-action-alert',
+                        //     fields: [{ value: '$.state' }]
+                        // },
+                        {
+                            name: '',
+                            type: 'data-list',
+                            fields: [],
+                        },
+                        {
+                            name: '',
+                            type: 'data-list',
+                            fields: [],
+                        },
+                    ],
+                },
+            ],
         },
         {
-            label: 'Parties',
-            case_field_id: 'parties',
-            value: [],
+            id: 'casefile',
+            name: 'Case file',
+            type: 'page',
+            sections: [
+                {
+                    id: 'documents',
+                    name: 'Case file',
+                    type: 'document-panel',
+                    fields: [{ value: '' }],
+                },
+            ],
         },
         {
-            label: 'Type',
-            case_field_id: 'type',
-            value: ['$.jurisdiction', ' (', '$.case_type_id', ') '],
-        },
-        {
-            label: 'Decision needed on',
-            case_field_id: 'status',
-            value: '$.status',
-        },
-        {
-            label: 'Case Start Date',
-            case_field_id: 'createdDate',
-            value: '$.createdDate',
-            date_format: 'd MMM yyyy',
-        },
-        {
-            label: 'Date of Last Action',
-            case_field_id: 'lastModified',
-            value: '$.lastModified',
-            date_format: 'd MMM yyyy',
+            id: 'timeline',
+            name: 'Timeline',
+            type: 'page',
+            sections: [
+                {
+                    id: 'events',
+                    name: 'Timeline',
+                    type: 'timeline-panel',
+                    fields: [{ value: '$.events' }],
+                },
+            ],
         },
     ],
+    decision: {
+        id: 'decision',
+        name: 'Make a decision',
+        type: 'decision-page',
+        options: [
+            {
+                id: 'true',
+                name: 'True',
+            },
+            {
+                id: 'false',
+                name: 'False',
+            },
+        ],
+    },
 }
-
-/*tslint:enable */

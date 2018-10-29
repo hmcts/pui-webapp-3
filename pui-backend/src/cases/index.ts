@@ -1,154 +1,107 @@
-import axios, { AxiosInstance } from 'axios'
-import * as express from 'express'
 import * as log4js from 'log4js'
-import { map } from 'p-iteration'
-import * as striptags from 'striptags'
-import { config } from '../config'
-import { jurisdictions } from '../config/refJurisdiction'
-import { Case, EnhancedRequest, SimpleCase } from '../lib/model'
-import { process } from '../lib/processors'
 import * as ccd from '../lib/services/ccd'
-
+import * as coh from '../lib/services/coh'
+import * as express from 'express'
+import * as striptags from 'striptags'
+import { Case, EnhancedRequest, SimpleCase } from '../lib/model'
+import * as caseList from './list'
+import { config } from '../config'
+import * as questions from './questions'
+import { process } from '../lib/processors'
 import { templates } from '../lib/templates'
-import * as sscsCaseListTemplate from '../lib/templates/sscs/benefit'
 
-const logger = log4js.getLogger('cases')
+const logger = log4js.getLogger('case')
 logger.level = config.logging
 
-let http: AxiosInstance
-
-const CORJuristiction = 'SSCS'
-
-async function getCases(userId: string): Promise<Case[][]> {
-    const collection: Case[][] = await map(jurisdictions, async jurisdiction => {
-        logger.info('Getting cases for ', jurisdiction.jur)
-
-        const response = await ccd.getCases(userId, jurisdiction)
-
-        const caseList: Case[] = response.data.map(caseJson => Case.create(caseJson))
-
-        return caseList
-    })
-
-    return collection
-}
-
-async function getCOR(casesData: Case[]) {
-    const caseIds = casesData.map(caseRow => 'case_id=' + caseRow.id).join('&')
-
-    if (casesData[0].jurisdiction === CORJuristiction) {
-        const hearings: any = await http.get(`${config.services.coh.corApi}/continuous-online-hearings/?${caseIds}`)
-        if (hearings.online_hearings) {
-            const caseStateMap = new Map(
-                hearings.online_hearings.map(hearing => [Number(hearing.case_id), hearing.current_state])
-            )
-
-            casesData.forEach(caseRow => {
-                const state: any = caseStateMap.get(Number(caseRow.id))
-                if (state && state.state_name) {
-                    // TODO: this state should only change if CCD is the COH state else default to CCD state
-
-                    let formattedState = state.split('_').join(' ')
-                    formattedState = formattedState[0].toUpperCase() + formattedState.slice(1)
-
-                    caseRow.state = formattedState
-
-                    if (new Date(caseRow.lastModified) < new Date(state.state_datetime)) {
-                        caseRow.lastModified = state.state_datetime
-                    }
-                }
-            })
-        }
-    }
-
-    return casesData
-}
-
-function rawCasesReducer(caseList: Case[], columns) {
-    return caseList.map(caseRow => {
-        return {
-            caseFields: columns.reduce((row, column) => {
-                row[column.case_field_id] = process(column.value, caseRow)
-                return row
-            }, {}),
-            caseId: caseRow.id,
-            caseJurisdiction: caseRow.jurisdiction,
-            caseTypeId: caseRow.caseTypeId,
-        }
-    })
-}
-
-async function processCaseList(caseList: Case[]): Promise<SimpleCase[]> {
-    let results: SimpleCase[] = []
-
-    if (caseList) {
-        logger.info('Getting COR')
-        const casesData = await getCOR(caseList)
-        const jurisdiction = casesData[0].jurisdiction
-        const caseType = casesData[0].caseTypeId
-        logger.info(`Getting template ${jurisdiction}, ${caseType}`)
-        const template = templates(jurisdiction, caseType)
-        results = rawCasesReducer(casesData, template.columns).filter(row => {
-            return Boolean(row.caseFields.caseRef)
+export function replaceSectionValues(section: any, details: any): any {
+    if (section.sections && section.sections.length) {
+        section.sections.forEach(childSection => {
+            replaceSectionValues(childSection, details)
+        })
+    } else {
+        section.fields.forEach(field => {
+            field.value = process(field.value, details)
         })
     }
-
-    return results
 }
 
-function sortResults(a: Case, b: Case) {
-    const dateA: any = new Date(a.caseFields.dateOfLastAction)
-    const dateB: any = new Date(a.caseFields.dateOfLastAction)
-    return dateA - dateB
-}
+export async function getSchema(userId: string, jurisdiction: string, caseType: string, caseId: string): Promise<any> {
+    logger.info('Getting case details', userId, jurisdiction, caseType, caseId)
+    const details = await ccd.getCase(userId, jurisdiction, caseType, caseId)
+    logger.info('Getting case events')
+    const events = await ccd.getEvents(userId, jurisdiction, caseType, caseId)
 
-function asyncReturnOrError(promise: Promise<any>, message: string, res: express.Response): any {
-    return promise
-        .then(data => {
-            return data
-        })
-        .catch(err => {
-            logger.error(message)
-            res.status(err.statusCode || 500).send(err)
-            return null
-        })
-}
-
-export function tidyTemplate(template: any) {
-    return {
-        columns: template.columns.map(column => {
-            return {
-                case_field_id: column.case_field_id,
-                label: column.label,
-            }
-        }),
+    let caseQuestions = []
+    let hearing
+    if (jurisdiction === 'SSCS') {
+        caseQuestions = await questions.getQuestionsByCase(caseId, userId)
+        hearing = coh.getHearing(caseId)
     }
+
+    details.events = events
+    details.questions = caseQuestions
+        ? caseQuestions.sort((a, b) => {
+              return b.question_round_number - a.question_round_number
+          })
+        : []
+
+    details.hearing_data = hearing && hearing.online_hearings ? hearing.online_hearings[0] : []
+
+    const ccdState = details.state
+    const hearingData = hearing && hearing.online_hearings ? hearing.online_hearings[0] : undefined
+    const questionRoundData = details.questions
+    const consentOrder = details.case_data.consentOrder ? details.case_data.consentOrder : undefined
+    const hearingType = details.case_data.appeal ? details.case_data.appeal.hearingType : undefined
+
+    // const caseState = processCaseStateEngine({
+    //     jurisdiction,
+    //     caseType,
+    //     ccdState,
+    //     hearingType,
+    //     hearingData,
+    //     questionRoundData,
+    //     consentOrder,
+    // })
+
+    //details.state = caseState;
+
+    const schema = JSON.parse(JSON.stringify(templates(details.jurisdiction, details.case_type_id)))
+    console.log(schema)
+    if (schema.details) {
+        replaceSectionValues(schema.details, details)
+    }
+
+    schema.sections.forEach(section => replaceSectionValues(section, details))
+    schema.id = details.id
+    schema.case_jurisdiction = details.jurisdiction
+    schema.case_type_id = details.case_type_id
+
+    // getDocuments(getDocIdList(caseData.documents), getOptionsDoc(req))
+    // .then(appendDocIdToDocument)
+    // .then(documents => {
+    //   {
+    // schema.documents = documents;
+
+    return schema
 }
 
-export async function list(req: EnhancedRequest, res: express.Response, next: express.NextFunction) {
-    let caseLists: Case[][]
-
-    http = axios.create({})
-
-    logger.info('Getting cases')
-
-    caseLists = await asyncReturnOrError(getCases(req.auth.userId), 'Error Getting cases', res)
-
-    if (caseLists) {
-        logger.info('Processing cases ', caseLists.length)
-
-        let results = await asyncReturnOrError(
-            map(caseLists, async (caseList: Case[]) => {
-                return await processCaseList(caseList)
-            }),
-            'Error Processing List',
-            res
+export async function getCase(req: EnhancedRequest, res: express.Response, next: express.NextFunction) {
+    try {
+        const data = await getSchema(
+            req.auth.userId,
+            striptags(req.params.jur),
+            striptags(req.params.caseType),
+            striptags(req.params.caseId)
         )
 
-        results = [].concat(...results).sort(sortResults)
-        const aggregatedData = { ...tidyTemplate(sscsCaseListTemplate.default), results }
-        res.setHeader('Access-Control-Allow-Origin', '*')
         res.setHeader('content-type', 'application/json')
-        res.status(200).send(JSON.stringify(aggregatedData))
+        res.status(200).send(JSON.stringify(data))
+    } catch (err) {
+        logger.error('Error getting case data')
+        res.status(err.statusCode || 500).send(err)
     }
+}
+
+export async function getCases(req: EnhancedRequest, res: express.Response, next: express.NextFunction) {
+    return caseList.list(req, res, next)
 }
