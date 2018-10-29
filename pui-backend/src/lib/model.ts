@@ -1,9 +1,10 @@
 import * as express from 'express'
 
-// NB THis is incomplete  and using this class leaves case list unfunctional
-//  adding json in getCases rather than instigating new Cases by Case.create
-// will work
-
+export interface JurisdictionObject {
+    caseType: string,
+    filter: string,
+    jur: string
+}
 export interface EnhancedRequest extends express.Request {
     auth?: {
         roles: string[]

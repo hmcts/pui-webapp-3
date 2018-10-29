@@ -43,7 +43,7 @@ async function generateToken() {
             token: response.data,
         }
     } catch (e) {
-        logger.info('Error creating S2S token! S2S service error - ', e.message)
+        logger.info('Error creating S2S token! S2S service error - ', e)
     }
 }
 export async function serviceTokenGenerator(): Promise<Token> {

@@ -2,31 +2,7 @@ export const config = {
     cookies: {
         token: '__auth__',
     },
-    idam: {
-        idamApiUrl: 'https://preprod-idamapi.reform.hmcts.net:3511',
-        idamClientID: 'juiwebapp',
-        idamLoginUrl: 'https://idam.preprod.ccidam.reform.hmcts.net/login',
-        indexUrl: '/',
-        oauthCallbackUrl: '/oauth2/callback',
-    },
     indexUrl: '/',
-    jurisdictions: [
-        {
-            caseType: 'DIVORCE',
-            filter: '',
-            jur: 'DIVORCE',
-        },
-        {
-            caseType: 'Benefit',
-            filter: '&state=appealCreated&case.appeal.benefitType.code=PIP',
-            jur: 'SSCS',
-        },
-        {
-            caseType: 'FinancialRemedyMVP2',
-            filter: '',
-            jur: 'DIVORCE',
-        },
-    ],
     logging: 'info',
     microservice: 'jui_webapp',
     port: 3000,
@@ -44,6 +20,13 @@ export const config = {
         },
         coh: {
             corApi: 'http://coh-cor-aat.service.core-compute-aat.internal',
+        },
+        idam: {
+            idamApiUrl: 'https://preprod-idamapi.reform.hmcts.net:3511',
+            idamClientID: 'juiwebapp',
+            idamLoginUrl: 'https://idam.preprod.ccidam.reform.hmcts.net/login',
+            indexUrl: '/',
+            oauthCallbackUrl: '/oauth2/callback',
         },
     },
     sessionSecret: 's3cretSauc3',

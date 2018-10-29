@@ -1,6 +1,25 @@
+import { caseStatusMap } from '../config/refCaseStatus'
 import * as jp from 'jsonpath'
 
-export function documentProcessor(documents, caseData) {
+function createState(map, status) {
+    return {
+        name: map && map[status.stateName] ? map[status.stateName] : status.stateName,
+        actionGoTo: status.actionGoTo,
+        ID: status.ID,
+    }
+}
+
+const caseStatusProcessor = (status, caseData) => {
+    if (status) {
+        const jud = caseStatusMap[caseData.jurisdiction.toLowerCase()]
+        const map = jud ? jud[caseData.case_type_id.toLowerCase()] : {}
+        return createState(map, status)
+    }
+
+    return status
+}
+
+function documentProcessor(documents, caseData) {
     if (!Array.isArray(documents)) {
         documents = [documents]
     }
@@ -23,7 +42,6 @@ export function process(lookup, caseData) {
         let value = splitLookup[0]
         const processor = splitLookup.length > 1 ? splitLookup[1] : null
 
-        // Run jsonpath if it begins with an A take the full result else just take the 1st value.
         if (value.startsWith('A')) {
             value = value.substring(1)
             value = jp.query(caseData, value)
@@ -34,6 +52,21 @@ export function process(lookup, caseData) {
         // Processors
         if (value && processor && processor === 'document_processor') {
             value = documentProcessor(value, caseData)
+        }
+
+        if (value && processor && processor === 'newline_processor') {
+            if (typeof value === 'string') {
+                value = value ? `${value}\n` : ''
+            } else if (Array.isArray(value)) {
+                value = (value as []).filter(v => v).join('\n')
+            }
+        }
+        if (splitLookup.length > 1 && processor === 'if_empty_processor') {
+            value = value ? value : splitLookup[2] ? splitLookup[2] : ''
+        }
+
+        if (value && processor && processor === 'case_status_processor') {
+            value = caseStatusProcessor(value, caseData)
         }
 
         return value

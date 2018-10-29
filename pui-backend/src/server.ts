@@ -8,6 +8,7 @@ import * as log4js from 'log4js'
 // PUI imports
 import * as auth from './auth'
 import * as cases from './cases'
+import * as details from './cases/details'
 import { config } from './config'
 
 import * as sessionFileStore from 'session-file-store'
@@ -66,7 +67,7 @@ app.use(auth.attach)
 
 app.get('/api/user', auth.user)
 app.get('/api/cases', cases.list)
-app.get('/api/cases/:jur/:casetype/:case_id', cases.details)
+app.get('/api/cases/:jur/:caseType/:caseId', details.getCase)
 
 // Start !
 app.listen(PORT, () => {

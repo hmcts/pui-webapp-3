@@ -1,18 +1,28 @@
-import axios, { AxiosInstance } from 'axios'
+import axios, { AxiosInstance, AxiosResponse } from 'axios'
+import * as log4js from 'log4js'
 import * as moment from 'moment'
 import { config } from '../../config'
+import { JurisdictionObject } from './../model'
 import * as coh from './coh'
+
+const logger = log4js.getLogger('auth')
+logger.level = config.logging
 
 const http: AxiosInstance = axios.create({})
 const apiUrl = config.services.ccd.dataApi
 
-export async function getCase(userId, jurisdiction, caseType, caseId) {
-    return http.get(
-        `${apiUrl}/caseworkers/${userId}/jurisdictions/${jurisdiction}/case-types/${caseType}/cases/${caseId}`
-    )
+function sortEvents(result1: any, result2: any): number {
+    return moment.duration(moment(result2.dateUtc).diff(moment(result1.dateUtc))).asMilliseconds()
 }
 
-export async function getCases(userId, jurisdiction) {
+export async function getCase(userId: string, jurisdiction: string, caseType: string, caseId: string): Promise<any> {
+    const response = await http.get(
+        `${apiUrl}/caseworkers/${userId}/jurisdictions/${jurisdiction}/case-types/${caseType}/cases/${caseId}`
+    )
+    return response.data
+}
+
+export async function getCases(userId: string, jurisdiction: JurisdictionObject): Promise<AxiosResponse> {
     return http.get(
         `${apiUrl}/caseworkers/${userId}/jurisdictions/${jurisdiction.jur}/case-types/${
             jurisdiction.caseType
@@ -20,17 +30,18 @@ export async function getCases(userId, jurisdiction) {
     )
 }
 
-function sortEvents(result1, result2) {
-    return moment.duration(moment(result2.dateUtc).diff(moment(result1.dateUtc))).asMilliseconds()
-}
-
-async function getEvents(userId, jurisdiction, caseType, caseId) {
+export async function getEvents(userId: string, jurisdiction: string, caseType: string, caseId: string): Promise<any[]> {
     let cohEvents = null
-    const events = await http.get(
-        `${apiUrl}/caseworkers/${userId}/jurisdictions/${jurisdiction}/case-types/${caseType}/cases/${caseId}/events`
-    )
+    try {
+        const response = await http.get(
+            `${apiUrl}/caseworkers/${userId}/jurisdictions/${jurisdiction}/case-types/${caseType}/cases/${caseId}/events`
+        )
 
-    cohEvents = jurisdiction === 'SSCS' ? coh.getEvents(caseId, userId) : null
+        logger.info('Got case events')
+        cohEvents = jurisdiction === 'SSCS' ? coh.getEvents(caseId, userId) : []
 
-    return [].concat(events, cohEvents).sort(sortEvents)
+        return [].concat(response.data, cohEvents).sort(sortEvents)
+    } catch (e) {
+        logger.error(e)
+    }
 }

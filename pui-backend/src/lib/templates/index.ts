@@ -25,5 +25,5 @@ const templatesMap = {
 export function templates(jurisdiction, caseType) {
     const jud = templatesMap[jurisdiction.toLowerCase()]
     const template = jud ? jud[caseType.toLowerCase()] : defaultTemplate
-    return template ? template : defaultTemplate
+    return template ? template.default : defaultTemplate.default
 }

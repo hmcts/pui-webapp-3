@@ -46,16 +46,21 @@ export async function attach(req: EnhancedRequest, res: express.Response, next: 
         req.auth.expires = expires
         req.auth.roles = roles
         // also use these as axios defaults
+        logger.info('Using Idam Token in defaults')
         axios.defaults.headers.common.Authorization = `Bearer ${req.auth.token}`
-        axios.defaults.headers.common.ServiceAuthorization = req.headers.ServiceAuthorization
+        if (req.headers.ServiceAuthorization) {
+            logger.info('Using S2S Token in defaults')
+            axios.defaults.headers.common.ServiceAuthorization = req.headers.ServiceAuthorization
+        }
         next()
     }
 }
 
 export async function getTokenFromCode(req: express.Request, res: express.Response): Promise<AxiosResponse> {
-    const Authorization = `Basic ${new Buffer(`${config.idam.idamClientID}:${secret}`).toString('base64')}`
+    const Authorization = `Basic ${new Buffer(`${config.services.idam.idamClientID}:${secret}`).toString('base64')}`
     const options = {
         headers: {
+            Authorization,
             'Content-Type': 'application/x-www-form-urlencoded',
         },
     }
@@ -63,9 +68,9 @@ export async function getTokenFromCode(req: express.Request, res: express.Respon
     logger.info('Getting Token from auth code.')
 
     return http.post(
-        `${config.idam.idamApiUrl}/oauth2/token?grant_type=authorization_code&code=${req.query.code}&redirect_uri=${
+        `${config.services.idam.idamApiUrl}/oauth2/token?grant_type=authorization_code&code=${req.query.code}&redirect_uri=${
             config.protocol
-        }://${req.headers.host}${config.idam.oauthCallbackUrl}`,
+        }://${req.headers.host}${config.services.idam.oauthCallbackUrl}`,
         {},
         options
     )
@@ -75,8 +80,8 @@ export async function getUserDetails(jwt: string): Promise<AxiosResponse> {
     const options = {
         headers: { Authorization: `Bearer ${jwt}` },
     }
-    logger.info('Getting user details.')
-    return await http.get(`${config.idam.idamApiUrl}/details`, options)
+
+    return await http.get(`${config.services.idam.idamApiUrl}/details`, options)
 }
 
 export async function oauth(req: express.Request, res: express.Response, next: express.NextFunction) {
@@ -86,6 +91,7 @@ export async function oauth(req: express.Request, res: express.Response, next: e
         const response = await getTokenFromCode(req, res)
 
         if (response.data.access_token) {
+            logger.info('Getting user details')
             const details: any = await getUserDetails(response.data.access_token)
             res.cookie(config.cookies.token, response.data.access_token)
             session.auth = {

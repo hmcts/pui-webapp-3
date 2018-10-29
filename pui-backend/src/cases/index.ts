@@ -4,13 +4,15 @@ import * as log4js from 'log4js'
 import { map } from 'p-iteration'
 import * as striptags from 'striptags'
 import { config } from '../config'
+import { jurisdictions } from '../config/refJurisdiction'
 import { Case, EnhancedRequest, SimpleCase } from '../lib/model'
 import { process } from '../lib/processors'
 import * as ccd from '../lib/services/ccd'
+
 import { templates } from '../lib/templates'
 import * as sscsCaseListTemplate from '../lib/templates/sscs/benefit'
 
-const logger = log4js.getLogger('auth')
+const logger = log4js.getLogger('cases')
 logger.level = config.logging
 
 let http: AxiosInstance
@@ -18,7 +20,7 @@ let http: AxiosInstance
 const CORJuristiction = 'SSCS'
 
 async function getCases(userId: string): Promise<Case[][]> {
-    const collection: Case[][] = await map(config.jurisdictions, async jurisdiction => {
+    const collection: Case[][] = await map(jurisdictions, async jurisdiction => {
         logger.info('Getting cases for ', jurisdiction.jur)
 
         const response = await ccd.getCases(userId, jurisdiction)
@@ -85,7 +87,7 @@ async function processCaseList(caseList: Case[]): Promise<SimpleCase[]> {
         const jurisdiction = casesData[0].jurisdiction
         const caseType = casesData[0].caseTypeId
         logger.info(`Getting template ${jurisdiction}, ${caseType}`)
-        const template = templates(jurisdiction, caseType).default
+        const template = templates(jurisdiction, caseType)
         results = rawCasesReducer(casesData, template.columns).filter(row => {
             return Boolean(row.caseFields.caseRef)
         })
@@ -121,20 +123,6 @@ export function tidyTemplate(template: any) {
             }
         }),
     }
-}
-
-export async function getCase(userId: string, jurisdiction: string, caseType: string, caseId: string) {
-    const caseData = ccd.getCase(userId, jurisdiction, caseType, caseId)
-    const events = ccd.getEvents(userId, jurisdiction)
-}
-
-export async function details(req: EnhancedRequest, res: express.Response, next: express.NextFunction) {
-    const caseData = await getCase(
-        striptags(req.auth.userId),
-        striptags(req.params.jur),
-        striptags(req.params.caseType),
-        striptags(req.params.caseId)
-    )
 }
 
 export async function list(req: EnhancedRequest, res: express.Response, next: express.NextFunction) {
