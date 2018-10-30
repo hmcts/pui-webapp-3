@@ -13,6 +13,7 @@ import { DomainModule } from '../domain/domain.module'
 import { CaseResolve } from './resolve/case.resolve';
 import { ViewCaseComponent } from './pages/view-case/view-case.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { CreateCaseComponent } from './pages/create-case/create-case.component';
 
 const routes: Routes = [
     {
@@ -20,6 +21,12 @@ const routes: Routes = [
         component: DashboardComponent,
         canActivate: [AuthService],
         data: { roles: ['caseworker-probatex'] }
+    },
+
+    {
+        path: 'create-case',
+        component: CreateCaseComponent,
+        canActivate: [AuthService],
     },
 
     {
@@ -55,7 +62,7 @@ const routes: Routes = [
         HmctsModule,
         DomainModule
     ],
-    declarations: [DashboardComponent, ViewCaseComponent],
+    declarations: [DashboardComponent, ViewCaseComponent, CreateCaseComponent],
     providers: [CaseResolve],
     exports: [RouterModule]
 })
