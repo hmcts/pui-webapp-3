@@ -8,6 +8,10 @@ import { HmctsModule } from '../hmcts/hmcts.module'
 
 import { FooterComponent } from './components/footer/footer.component'
 import { TableComponent } from './components/table/table.component';
+import { CaseActionsComponent } from './components/case-actions/case-actions.component';
+import { CaseActionAlertComponent } from './components/case-action-alert/case-action-alert.component';
+import { DataListComponent } from './components/data-list/data-list.component';
+import { GovukModule } from '../govuk/govuk.module';
 
 
 
@@ -18,10 +22,10 @@ import { TableComponent } from './components/table/table.component';
         FormsModule,
         ReactiveFormsModule,
         RouterModule,
-        // GovukModule,
+        GovukModule,
         HmctsModule
     ],
-    declarations: [FooterComponent, TableComponent],
-    exports: [FooterComponent, TableComponent]
+    declarations: [CaseActionsComponent, CaseActionAlertComponent, DataListComponent, FooterComponent, TableComponent],
+    exports: [CaseActionsComponent, CaseActionAlertComponent, DataListComponent, FooterComponent, TableComponent]
 })
 export class SharedModule { }

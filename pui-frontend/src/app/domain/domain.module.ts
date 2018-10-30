@@ -19,6 +19,7 @@ import { HttpClientModule } from '@angular/common/http'
 import { HmctsrolesLibModule } from 'hmctsroles-lib';
 import { CaseViewerComponent } from './components/case-viewer/components/case-viewer/case-viewer.component';
 import { CaseBarComponent } from './components/casebar/casebar.component';
+import { SummaryPanelComponent } from './components/case-viewer/components/summary-panel/summary-panel.component';
 
 
 
@@ -27,7 +28,7 @@ import { CaseBarComponent } from './components/casebar/casebar.component';
 @NgModule({
     imports: [CommonModule, RouterModule, ReactiveFormsModule, HmctsModule, SharedModule, HttpClientModule, HmctsrolesLibModule],
     exports: [CaseBarComponent, CaseViewerComponent, HeaderComponent, SearchResultComponent],
-    declarations: [CaseBarComponent, CaseViewerComponent, HeaderComponent, SearchResultComponent],
+    declarations: [CaseBarComponent, CaseViewerComponent, HeaderComponent, SearchResultComponent, SummaryPanelComponent],
     providers: [CaseService]
 })
 export class DomainModule { }
