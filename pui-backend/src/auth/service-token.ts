@@ -9,7 +9,7 @@ const logger = log4js.getLogger('auth')
 logger.level = config.logging
 
 const microservice = config.microservice
-const secret = process.env.JUI_S2S_SECRET
+const secret = process.env.S2S_SECRET
 
 const cache = {}
 let http: AxiosInstance
