@@ -7,9 +7,26 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CreateCaseComponent implements OnInit {
 
+  jurisdictionId = 'TEST';
+  caseTypeId = 'TestAddressBookCase';
+  eventTriggerId = 'createCase';
+
   constructor() { }
 
   ngOnInit() {
   }
+
+
+
+  submit(event: any): void {
+    console.log('CaseCreateConsumerComponent submit event=', event);
+  }
+
+  cancel(event: any): void {
+    console.log('CaseCreateConsumerComponent cancel event=', event);
+  }
+
+
+
 
 }

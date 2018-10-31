@@ -1,3 +1,16 @@
 <p>
   create-case works!
+
+
 </p>
+
+<div class='container-fluid'>
+<ccd-case-create [jurisdiction]="jurisdictionId"
+[caseType]="caseTypeId"
+[event]="eventTriggerId"
+(cancelled)="cancel($event)"
+(submitted)="submit($event)"></ccd-case-create>
+
+</div>
+
+

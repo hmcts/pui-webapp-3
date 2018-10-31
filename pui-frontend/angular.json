@@ -17,12 +17,21 @@
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "./node_modules/govuk_frontend_toolkit/stylesheets",
+                "./node_modules/govuk-elements-sass/public/sass"
+              ]
+            },
             "tsConfig": "src/tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/app/public"
             ],
             "styles": [
+              "src/app/style/app.scss",
+              "./node_modules/govuk_template_mustache/assets/stylesheets/govuk-template.css",
               "src/styles.scss"
             ],
             "scripts": []
