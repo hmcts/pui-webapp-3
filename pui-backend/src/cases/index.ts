@@ -1,14 +1,17 @@
+import * as exceptionFormatter from 'exception-formatter'
+import * as express from 'express'
 import * as log4js from 'log4js'
+import * as striptags from 'striptags'
+import { config } from '../config'
+import { Case, EnhancedRequest, SimpleCase } from '../lib/model'
+import { process } from '../lib/processors'
 import * as ccd from '../lib/services/ccd'
 import * as coh from '../lib/services/coh'
-import * as express from 'express'
-import * as striptags from 'striptags'
-import { Case, EnhancedRequest, SimpleCase } from '../lib/model'
-import * as caseList from './list'
-import { config } from '../config'
-import * as questions from './questions'
-import { process } from '../lib/processors'
 import { templates } from '../lib/templates'
+import { valueOrNull } from '../lib/util'
+import * as caseList from './list'
+import * as questions from './questions'
+import * as state from './state'
 
 const logger = log4js.getLogger('case')
 logger.level = config.logging
@@ -45,28 +48,18 @@ export async function getSchema(userId: string, jurisdiction: string, caseType: 
           })
         : []
 
-    details.hearing_data = hearing && hearing.online_hearings ? hearing.online_hearings[0] : []
-
-    const ccdState = details.state
-    const hearingData = hearing && hearing.online_hearings ? hearing.online_hearings[0] : undefined
-    const questionRoundData = details.questions
-    const consentOrder = details.case_data.consentOrder ? details.case_data.consentOrder : undefined
-    const hearingType = details.case_data.appeal ? details.case_data.appeal.hearingType : undefined
-
-    // const caseState = processCaseStateEngine({
-    //     jurisdiction,
-    //     caseType,
-    //     ccdState,
-    //     hearingType,
-    //     hearingData,
-    //     questionRoundData,
-    //     consentOrder,
-    // })
-
-    //details.state = caseState;
+    details.state = state.process({
+        caseType,
+        ccdState: details.state,
+        consentOrder: valueOrNull(details, 'details.case_data.consentOrder'),
+        hearingData: valueOrNull(hearing, 'online_hearings[0]'),
+        hearingType: valueOrNull(details, 'case_data.appeal.hearingType'),
+        jurisdiction,
+        questionRoundData: valueOrNull(details, 'questions'),
+    })
 
     const schema = JSON.parse(JSON.stringify(templates(details.jurisdiction, details.case_type_id)))
-    console.log(schema)
+
     if (schema.details) {
         replaceSectionValues(schema.details, details)
     }
@@ -97,7 +90,7 @@ export async function getCase(req: EnhancedRequest, res: express.Response, next:
         res.setHeader('content-type', 'application/json')
         res.status(200).send(JSON.stringify(data))
     } catch (err) {
-        logger.error('Error getting case data')
+        logger.error('Error getting case data', exceptionFormatter(err, config.exceptionOptions))
         res.status(err.statusCode || 500).send(err)
     }
 }

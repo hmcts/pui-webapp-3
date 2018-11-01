@@ -2,6 +2,11 @@ export const config = {
     cookies: {
         token: '__auth__',
     },
+
+    exceptionOptions: {
+        maxLines: 1,
+    },
+
     indexUrl: '/',
     logging: 'info',
     microservice: 'jui_webapp',
@@ -16,6 +21,7 @@ export const config = {
     secureCookie: false, // this needs to be 'true' in prod and needs https encryption to be used
     services: {
         ccd: {
+            componentApi: 'https://ccd-api-gateway-web-aat.service.core-compute-aat.internal',
             dataApi: 'https://ccd-data-store-api-aat.service.core-compute-aat.internal',
         },
         coh: {

@@ -1,10 +1,11 @@
 import axios, { AxiosPromise, AxiosResponse } from 'axios'
+import * as exceptionFormatter from 'exception-formatter'
 import * as express from 'express'
 import * as jwtDecode from 'jwt-decode'
 import * as log4js from 'log4js'
 import { config } from '../config'
 import { EnhancedRequest } from '../lib/model'
-import { serviceTokenGenerator } from './service-token'
+import { serviceTokenGenerator } from './serviceToken'
 
 const secret = process.env.IDAM_SECRET
 const logger = log4js.getLogger('auth')
@@ -21,38 +22,40 @@ export async function attach(req: EnhancedRequest, res: express.Response, next: 
 
     try {
         const token = await serviceTokenGenerator()
+
         req.headers.ServiceAuthorization = token.token
-    } catch (e) {
-        logger.error('Could not add S2S token header')
-    }
 
-    const userId = session.auth.userId
-    const jwt = session.auth.token
-    const roles = session.auth.roles
+        const userId = session.auth.userId
+        const jwt = session.auth.token
+        const roles = session.auth.roles
 
-    const jwtData = jwtDecode(jwt)
-    const expires = new Date(jwtData.exp).getTime()
-    const now = new Date().getTime() / 1000
-    const expired = expires < now
+        const jwtData = jwtDecode(jwt)
+        const expires = new Date(jwtData.exp).getTime()
+        const now = new Date().getTime() / 1000
+        const expired = expires < now
 
-    logger.info('Attaching auth')
+        logger.info('Attaching auth')
 
-    if (expired) {
-        res.status(401).send('Token expired!')
-    } else {
-        req.auth = jwtData
-        req.auth.token = jwt
-        req.auth.userId = userId
-        req.auth.expires = expires
-        req.auth.roles = roles
-        // also use these as axios defaults
-        logger.info('Using Idam Token in defaults')
-        axios.defaults.headers.common.Authorization = `Bearer ${req.auth.token}`
-        if (req.headers.ServiceAuthorization) {
-            logger.info('Using S2S Token in defaults')
-            axios.defaults.headers.common.ServiceAuthorization = req.headers.ServiceAuthorization
+        if (expired) {
+            logger.info('Could not add S2S token header')
+            res.status(401).send('Token expired!')
+        } else {
+            req.auth = jwtData
+            req.auth.token = jwt
+            req.auth.userId = userId
+            req.auth.expires = expires
+            req.auth.roles = roles
+            // also use these as axios defaults
+            logger.info('Using Idam Token in defaults')
+            axios.defaults.headers.common.Authorization = `Bearer ${req.auth.token}`
+            if (req.headers.ServiceAuthorization) {
+                logger.info('Using S2S Token in defaults')
+                axios.defaults.headers.common.ServiceAuthorization = req.headers.ServiceAuthorization
+            }
+            next()
         }
-        next()
+    } catch (exception) {
+        logger.error('Could not add S2S token header', exceptionFormatter(exception, config.exceptionOptions))
     }
 }
 

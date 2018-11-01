@@ -60,7 +60,8 @@ export async function getHearingByCase(caseId: string): Promise<any> {
 export async function getEvents(caseId: string, userId: string): Promise<any[]> {
     let hearingId
 
-    let hearing = await getHearing(caseId)
+    const hearing = await getHearing(caseId)
+
     if (hearing) {
         hearingId = hearing.online_hearings[0] ? hearing.online_hearings[0].online_hearing_id : null
     } else {

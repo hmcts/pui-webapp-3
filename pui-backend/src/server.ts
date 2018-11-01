@@ -1,7 +1,9 @@
 import axios, { AxiosInstance } from 'axios'
+import * as bodyParser from 'body-parser'
 import * as cookieParser from 'cookie-parser'
 import * as express from 'express'
 import * as session from 'express-session'
+import { sanitizeBody } from 'express-validator/filter'
 import * as globalTunnel from 'global-tunnel-ng'
 import * as log4js from 'log4js'
 
@@ -9,6 +11,7 @@ import * as log4js from 'log4js'
 import * as auth from './auth'
 import * as cases from './cases'
 import * as caseList from './cases/list'
+import * as ccd from './ccd'
 import { config } from './config'
 
 import * as sessionFileStore from 'session-file-store'
@@ -32,6 +35,20 @@ if (config.proxy) {
         port: config.proxy.port,
     })
 }
+
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
+
+app.use(
+    sanitizeBody('*')
+        .trim()
+        .escape()
+)
+
+axios.interceptors.request.use(config => {
+    console.log('Global Interceptor')
+    return config
+})
 
 app.use((req, res, next) => {
     res.setHeader('Cache-Control', 'private, no-cache, no-store, max-age=0')
@@ -69,7 +86,10 @@ app.get('/api/user', auth.user)
 app.get('/api/cases', cases.getCases)
 app.get('/api/cases/:jur/:caseType/:caseId', cases.getCase)
 
-// Start !
+app.get('/api/ccd/*', ccd.get)
+app.post('/api/ccd/*', ccd.post)
+app.put('/api/ccd/*', ccd.put)
+
 app.listen(PORT, () => {
     logger.info(`listening on port ${PORT}`)
 })
