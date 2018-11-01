@@ -11,8 +11,7 @@ logger.level = config.logging
 const http: AxiosInstance = axios.create({})
 
 export async function get(req: EnhancedRequest, res: express.Response, next: express.NextFunction) {
-    let url = striptags(req.url).replace('/api/ccd', '')
-    url = url.replace(/internal\//, '')
+    const url = striptags(req.url).replace('/api/ccd', '')
     logger.info(`GET to ${config.services.ccd.componentApi}${url}`)
 
     try {

@@ -55,7 +55,7 @@ const routes: Routes = [
         children: caseEditRouting
     },
     {
-        path: 'case-progress',
+        path: 'case-progress/:caseId',
         component: CaseProgressComponent,
         canActivate: [AuthService],
         children: caseEditRouting
