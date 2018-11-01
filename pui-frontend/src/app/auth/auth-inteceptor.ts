@@ -9,7 +9,7 @@ import { AuthService } from './auth.service'
     providedIn: 'root'
 })
 export class AuthInteceptor implements HttpInterceptor {
-    constructor(public router: Router, private authService: AuthService) {}
+    constructor(public router: Router, private authService: AuthService) { }
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(request).do(
@@ -20,6 +20,12 @@ export class AuthInteceptor implements HttpInterceptor {
                 if (err instanceof HttpErrorResponse) {
                     if (err.status === 401) {
                         this.authService.loginRedirect()
+                    }
+
+                    else {
+                        console.log('@@@error', err)
+                        //this.router.navigate(['reporterror'], { queryParams: { page: 99 } });
+                        this.router.navigate(['reporterror', err.message]);
                     }
                 }
             }

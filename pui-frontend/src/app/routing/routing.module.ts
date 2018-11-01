@@ -22,12 +22,12 @@ import {
     LabelSubstitutionService, DocumentManagementService, PageValidationService
 } from '@hmcts/ccd-case-ui-toolkit';
 import { ScrollToService } from '@nicky-lenaers/ngx-scroll-to';
-// import { CaseProgressConsumerComponent } from './case-progress-consumer.component';
 import { AppConfig } from '../app.config';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material';
 import { HttpModule } from '@angular/http';
 import { CaseProgressComponent } from './pages/case-progress/case-progress.component';
+import { ReportErrorComponent } from './pages/report-error/report-error.component';
 
 
 const routes: Routes = [
@@ -72,6 +72,12 @@ const routes: Routes = [
         ]
     },
 
+    {
+        path: 'reporterror/:errmsg',
+        component: ReportErrorComponent,
+        canActivate: [AuthService]
+    }
+
 ]
 
 @NgModule({
@@ -91,7 +97,7 @@ const routes: Routes = [
         DomainModule,
         HttpModule
     ],
-    declarations: [DashboardComponent, ViewCaseComponent, CreateCaseComponent, CaseProgressComponent],
+    declarations: [DashboardComponent, ViewCaseComponent, CreateCaseComponent, CaseProgressComponent, ReportErrorComponent],
     providers: [CaseResolve,
         CasesService,
         CCDAuthService,
