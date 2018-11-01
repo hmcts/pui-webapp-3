@@ -12,11 +12,10 @@ const http: AxiosInstance = axios.create({})
 
 export async function get(req: EnhancedRequest, res: express.Response, next: express.NextFunction) {
     const url = striptags(req.url).replace('/api/ccd', '')
+    logger.info(`GET to ${config.services.ccd.componentApi}${url}`)
 
     try {
         const response = await http.get(`${config.services.ccd.componentApi}${url}`)
-
-        logger.info(`GET to ${config.services.ccd.componentApi}${url}`)
 
         res.status(200)
         res.send(JSON.stringify(response.data))

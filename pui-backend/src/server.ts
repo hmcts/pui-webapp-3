@@ -1,4 +1,4 @@
-import axios, { AxiosInstance } from 'axios'
+import axios from 'axios'
 import * as bodyParser from 'body-parser'
 import * as cookieParser from 'cookie-parser'
 import * as express from 'express'
@@ -44,11 +44,6 @@ app.use(
         .trim()
         .escape()
 )
-
-axios.interceptors.request.use(config => {
-    console.log('Global Interceptor')
-    return config
-})
 
 app.use((req, res, next) => {
     res.setHeader('Cache-Control', 'private, no-cache, no-store, max-age=0')

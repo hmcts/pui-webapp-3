@@ -14,7 +14,7 @@ export default {
         {
             label: 'Type',
             case_field_id: 'type',
-            value: ['$.jurisdiction', ' (', '$.case_type_id', ') '],
+            value: ['$.caseTypeId'],
         },
         {
             label: 'Decision needed on',
