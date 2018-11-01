@@ -3,13 +3,12 @@
       <div class="govuk-grid-row">
           <div class="govuk-grid-column-two-thirds">
               <div class="govuk-panel govuk-panel--confirmation">
-                  <h2 class="govuk-panel__title">Decision confirmed</h2>
-                  <div class="govuk-panel__body">{{case.id}}</div>
+                  <h2 class="govuk-panel__title">{{message}}</h2>
+                  <div class="govuk-panel__body">{{caseId}}</div>
               </div>
               <h2 class="govuk-heading-m">What happens next?</h2>
-              <p>We've sent this decision to admin and the case has been removed from your dashboard.</p>
-              <p>You will need to enter your decision in GAPs</p>
-              <p><a routerLink="">Back to dashboard</a></p>
+              <p>...</p>
+              <p><a routerLink="{{returnPage}}">{{returnLabel}}</a></p>
           </div>
       </div>
   </main>
