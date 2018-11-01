@@ -28,6 +28,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material';
 import { HttpModule } from '@angular/http';
 import { CaseProgressComponent } from './pages/case-progress/case-progress.component';
+import { StatusComponent } from './pages/status/status.component';
 
 
 const routes: Routes = [
@@ -91,7 +92,7 @@ const routes: Routes = [
         DomainModule,
         HttpModule
     ],
-    declarations: [DashboardComponent, ViewCaseComponent, CreateCaseComponent, CaseProgressComponent],
+    declarations: [DashboardComponent, ViewCaseComponent, CreateCaseComponent, CaseProgressComponent, StatusComponent],
     providers: [CaseResolve,
         CasesService,
         CCDAuthService,
