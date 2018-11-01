@@ -25,7 +25,7 @@ export class AuthInteceptor implements HttpInterceptor {
                     else {
                         console.log('@@@error', err)
                         //this.router.navigate(['reporterror'], { queryParams: { page: 99 } });
-                        this.router.navigate(['reporterror', err.message]);
+                        //this.router.navigate(['reporterror', err.message]);
                     }
                 }
             }
