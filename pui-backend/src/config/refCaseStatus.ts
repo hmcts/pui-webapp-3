@@ -1,50 +1,52 @@
 export const caseStatusMap = {
-    sscs: {
-        benefit: {
-            continuous_online_hearing_started: 'DWP response',
-            question_answered: 'Appellant’s answers',
-            question_deadline_elapsed: 'Incomplete response from appellant',
-            question_deadline_extension_elapsed: 'Incomplete response from appellant',
-            question_drafted: 'Question drafted',
-            continuous_online_hearing_decision_issued: 'Decision issued',
-            question_deadline_extension_granted: 'Question deadline extension granted',
-            question_issued: 'Question issued',
-            appealCreated: 'Appeal created',
-        },
-    },
     cmc: {
         moneyclaimcase: {
             open: 'Open',
         },
     },
+    divorce: {
+        AwaitingHWFDecision: 'Awaiting HWF decision',
+        AwaitingPayment: 'Awaiting payment',
+        divorce: {
+            AosAwaiting: 'Aos awaiting',
+            AosCompleted: 'Aos completed',
+            AosCompletedAwaitingAnswer: 'Aos completed awaiting answer',
+            AosStarted: 'Aos started',
+            AwaitingDecreeNisi: 'Awaiting decree nisi',
+        },
+
+        financialremedymvp2: {
+            applicationIssued: 'Application issued',
+            awaitingHWFDecision: 'Awaiting HWF decision',
+            awaitingPaymentResponse: 'Awaiting payment response',
+            caseAdded: 'Case added',
+            consentOrderApproved: 'Consent order approved',
+            consentOrderMade: 'Consent Order Made',
+            consentOrderNotApproved: 'Consent order not approved',
+            referredToJudge: 'Draft consent order',
+        },
+    },
+    sscs: {
+        benefit: {
+            appealCreated: 'Appeal created',
+            continuous_online_hearing_decision_issued: 'Decision issued',
+            continuous_online_hearing_started: 'DWP response',
+            question_answered: 'Appellant’s answers',
+            question_deadline_elapsed: 'Incomplete response from appellant',
+            question_deadline_extension_elapsed: 'Incomplete response from appellant',
+            question_deadline_extension_granted: 'Question deadline extension granted',
+            question_drafted: 'Question drafted',
+            question_issued: 'Question issued',
+        },
+    },
+
     probate: {
         grantofrepresentation: {
             BOExamining: 'BO Examining',
-            PAAppCreated: 'PA app created',
-            CasePrinted: 'Case printed',
             CaseCreated: 'Case created',
             CasePaymentFailed: 'Case payment failed',
-        },
-    },
-    divorce: {
-        divorce: {
-            AwaitingPayment: 'Awaiting payment',
-            AosAwaiting: 'Aos awaiting',
-            AosStarted: 'Aos started',
-            AosCompletedAwaitingAnswer: 'Aos completed awaiting answer',
-            AosCompleted: 'Aos completed',
-            AwaitingHWFDecision: 'Awaiting HWF decision',
-            AwaitingDecreeNisi: 'Awaiting decree nisi',
-        },
-        financialremedymvp2: {
-            consentOrderMade: 'Consent Order Made',
-            awaitingPaymentResponse: 'Awaiting payment response',
-            awaitingHWFDecision: 'Awaiting HWF decision',
-            caseAdded: 'Case added',
-            consentOrderApproved: 'Consent order approved',
-            consentOrderNotApproved: 'Consent order not approved',
-            referredToJudge: 'Draft consent order',
-            applicationIssued: 'Application issued',
+            CasePrinted: 'Case printed',
+            PAAppCreated: 'PA app created',
         },
     },
 }

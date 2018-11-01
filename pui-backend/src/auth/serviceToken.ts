@@ -5,7 +5,7 @@ import * as otp from 'otp'
 import { config } from '../config'
 import { Token } from '../lib/model'
 
-const logger = log4js.getLogger('auth')
+const logger = log4js.getLogger('serviceToken')
 logger.level = config.logging
 
 const microservice = config.microservice
