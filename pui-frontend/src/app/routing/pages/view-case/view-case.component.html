@@ -2,7 +2,7 @@
 <div data-selector="case-viewer-component">
     <div class="jui-width-container">
             <br>
-            <a  routerLink="/case-progress/{{case.id}}">Case Progress</a>
+            <a   role="button" class="govuk-button hmcts-page-heading__button"  routerLink="/case-progress/{{case.id}}">Case Progress</a>
         <main id="content" role="main" class="govuk-main-wrapper">
             <app-hmcts-sub-navigation [items]="links"></app-hmcts-sub-navigation>
             <app-case-viewer [case]="case" [sectionId]="sectionId"></app-case-viewer>
