@@ -9,7 +9,7 @@ import { process } from '../lib/processors'
 import * as ccd from '../lib/services/ccd'
 
 import { listTemplates } from '../lib/templates'
-import * as benefitTemplate from '../lib/templates/sscs'
+import { benefitTemplate } from '../lib/templates/sscs'
 
 const logger = log4js.getLogger('cases')
 logger.level = config.logging
@@ -146,7 +146,7 @@ export async function list(req: EnhancedRequest, res: express.Response, next: ex
         )
         if (results) {
             results = [].concat(...results).sort(sortResults)
-            const aggregatedData = { ...tidyTemplate(benefitTemplate), results }
+            const aggregatedData = { ...tidyTemplate(benefitTemplate.list), results }
             res.setHeader('Access-Control-Allow-Origin', '*')
             res.setHeader('content-type', 'application/json')
             res.status(200).send(JSON.stringify(aggregatedData))

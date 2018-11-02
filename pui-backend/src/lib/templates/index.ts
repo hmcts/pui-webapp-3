@@ -11,7 +11,7 @@ const map = {
     },
     divorce: {
         divorce: divorceTemplate,
-        financialRemedymvp2: financialRemedyTemplate,
+        financialremedymvp2: financialRemedyTemplate,
     },
     probate: {
         grantofrepresentation: grantOfRepresentationTemplate,
@@ -22,6 +22,7 @@ const map = {
 }
 
 function template(jud, jurisdiction, caseType, defaultTemplate, node: string) {
+    console.log(jud)
     return jud ? jud[caseType.toLowerCase()][node] : defaultTemplate
 }
 
