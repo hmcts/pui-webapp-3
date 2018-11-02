@@ -1,4 +1,4 @@
-import { TemplatePair } from './../../templateModel'
+import { TemplatePair } from '../../models/templates'
 
 /*tslint:disable */
 export const financialRemedyTemplate: TemplatePair = {

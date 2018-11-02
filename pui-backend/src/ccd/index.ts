@@ -4,7 +4,7 @@ import * as express from 'express'
 import * as log4js from 'log4js'
 import * as striptags from 'striptags'
 import { config } from '../config'
-import { Case, EnhancedRequest, SimpleCase } from '../lib/model'
+import { Case, EnhancedRequest, SimpleCase } from '../lib/models'
 
 const logger = log4js.getLogger('ccd')
 logger.level = config.logging

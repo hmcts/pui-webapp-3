@@ -4,7 +4,7 @@ import * as express from 'express'
 import * as jwtDecode from 'jwt-decode'
 import * as log4js from 'log4js'
 import { config } from '../config'
-import { EnhancedRequest } from '../lib/model'
+import { EnhancedRequest } from '../lib/models'
 import { serviceTokenGenerator } from './serviceToken'
 
 const secret = process.env.IDAM_SECRET

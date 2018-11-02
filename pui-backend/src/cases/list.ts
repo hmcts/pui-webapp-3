@@ -4,12 +4,12 @@ import * as log4js from 'log4js'
 import { map } from 'p-iteration'
 import { config } from '../config'
 import { jurisdictions } from '../config/refJurisdiction'
-import { Case, EnhancedRequest, SimpleCase } from '../lib/model'
+import { Case, EnhancedRequest, SimpleCase } from '../lib/models'
 import { process } from '../lib/processors'
 import * as ccd from '../lib/services/ccd'
 
 import { listTemplates } from '../lib/templates'
-import * as sscsCaseListTemplate from '../lib/templates/sscs/benefitList'
+import * as benefitTemplate from '../lib/templates/sscs'
 
 const logger = log4js.getLogger('cases')
 logger.level = config.logging
@@ -146,7 +146,7 @@ export async function list(req: EnhancedRequest, res: express.Response, next: ex
         )
         if (results) {
             results = [].concat(...results).sort(sortResults)
-            const aggregatedData = { ...tidyTemplate(sscsCaseListTemplate.default), results }
+            const aggregatedData = { ...tidyTemplate(benefitTemplate), results }
             res.setHeader('Access-Control-Allow-Origin', '*')
             res.setHeader('content-type', 'application/json')
             res.status(200).send(JSON.stringify(aggregatedData))
