@@ -7,9 +7,9 @@ import { Component, OnInit } from '@angular/core'
     styleUrls: ['./create-case.component.scss']
 })
 export class CreateCaseComponent implements OnInit {
-    jurisdictionId = 'TEST'
-    caseTypeId = 'TestAddressBookCase'
-    eventTriggerId = 'createCase'
+    jurisdictionId = 'DIVORCE'
+    caseTypeId = 'DIVORCE'
+    eventTriggerId = 'solicitorCreate'
 
     constructor(private router: Router) {}
 

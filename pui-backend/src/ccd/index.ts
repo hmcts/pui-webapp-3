@@ -1,4 +1,5 @@
 import axios, { AxiosInstance } from 'axios'
+import * as exceptionFormatter from 'exception-formatter'
 import * as express from 'express'
 import * as log4js from 'log4js'
 import * as striptags from 'striptags'
@@ -20,6 +21,7 @@ export async function get(req: EnhancedRequest, res: express.Response, next: exp
         res.status(200)
         res.send(JSON.stringify(response.data))
     } catch (e) {
+        logger.error('Error on GET', exceptionFormatter(e, config.exceptionOptions))
         res.status(e.response.status)
         res.send()
     }
@@ -35,6 +37,7 @@ export async function put(req: EnhancedRequest, res: express.Response, next: exp
         res.status(200)
         res.send(JSON.stringify(response.data))
     } catch (e) {
+        logger.error('Error on PUT', exceptionFormatter(e, config.exceptionOptions))
         res.status(e.response.status)
         res.send()
     }
@@ -50,6 +53,7 @@ export async function post(req: EnhancedRequest, res: express.Response, next: ex
         res.status(200)
         res.send(JSON.stringify(response.data))
     } catch (e) {
+        logger.error('Error on POST', exceptionFormatter(e, config.exceptionOptions))
         res.status(e.response.status)
         res.send()
     }
