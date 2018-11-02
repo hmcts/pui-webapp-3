@@ -1,7 +1,7 @@
-import { TemplatePair } from './../../templateModel'
+import { TemplatePair } from '../../models/templates'
 
 /*tslint:disable */
-export const divorce: TemplatePair = {
+export const divorceTemplate: TemplatePair = {
     detail: {
         decision: {
             id: 'decision',

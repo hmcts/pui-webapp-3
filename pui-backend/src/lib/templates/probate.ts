@@ -1,10 +1,15 @@
 import { TemplatePair } from '../models/templates'
 
 /*tslint:disable */
-export const defaultTemplate: TemplatePair = {
+export const grantOfRepresentationTemplate: TemplatePair = {
     detail: {
         details: {
-            fields: [{ value: '$.id' }, { value: '-' }],
+            fields: [
+                { value: '$.id' },
+                {
+                    value: ['$.case_data.deceasedForenames', ' ', '$.case_data.deceasedSurname'],
+                },
+            ],
         },
         sections: [
             {
@@ -17,19 +22,32 @@ export const defaultTemplate: TemplatePair = {
                         type: 'summary-panel',
                         sections: [
                             {
-                                name: 'Recent events',
-                                type: 'timeline',
-                                fields: [{ value: '$.events' }],
-                            },
-                            // {
-                            //     name: 'Action on',
-                            //     type: 'case-action-alert',
-                            //     fields: [{ value: '$.state' }]
-                            // },
-                            {
-                                name: '',
+                                name: 'Case details',
                                 type: 'data-list',
-                                fields: [],
+                                fields: [
+                                    {
+                                        name: 'Recent events',
+                                        type: 'timeline',
+                                        fields: [{ value: '$.events' }],
+                                    },
+                                    {
+                                        name: 'Action on',
+                                        type: 'case-action-alert',
+                                        fields: [{ value: '$.state|case_status_processor' }],
+                                    },
+                                    {
+                                        label: 'Parties',
+                                        value: ['$.case_data.deceasedForenames', ' ', '$.case_data.deceasedSurname'],
+                                    },
+                                    {
+                                        label: 'Case type',
+                                        value: 'Grant of representation',
+                                    },
+                                    {
+                                        label: 'Case number',
+                                        value: '$.id',
+                                    },
+                                ],
                             },
                             {
                                 name: '',
@@ -49,7 +67,7 @@ export const defaultTemplate: TemplatePair = {
                         id: 'documents',
                         name: 'Case file',
                         type: 'document-panel',
-                        fields: [{ value: '' }],
+                        fields: [],
                     },
                 ],
             },
@@ -93,22 +111,22 @@ export const defaultTemplate: TemplatePair = {
             {
                 label: 'Parties',
                 case_field_id: 'parties',
-                value: [],
+                value: ['$.caseData.deceasedForenames', ' ', '$.caseData.deceasedSurname'],
             },
             {
                 label: 'Type',
                 case_field_id: 'type',
-                value: ['$.caseTypeId'],
+                value: 'Grant of Representation',
             },
             {
                 label: 'Decision needed on',
                 case_field_id: 'status',
-                value: '$.status',
+                value: '$.state',
             },
             {
                 label: 'Case Start Date',
                 case_field_id: 'createdDate',
-                value: '$.createdDate',
+                value: '$.created_date',
                 date_format: 'd MMM yyyy',
             },
             {

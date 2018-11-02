@@ -1,7 +1,7 @@
 import { TemplatePair } from './../../templateModel'
 
 /*tslint:disable */
-export const financialRemedy: TemplatePair = {
+export const financialRemedyTemplate: TemplatePair = {
     detail: {
         details: {
             fields: [
