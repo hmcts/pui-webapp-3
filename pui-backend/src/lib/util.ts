@@ -1,3 +1,18 @@
+import * as express from 'express'
+import { Logger } from 'log4js'
+
+export function asyncReturnOrError(promise: any, message: string, res: express.Response, logger: Logger): any {
+    return promise
+        .then(data => {
+            return data
+        })
+        .catch(err => {
+            logger.error(err)
+            res.status(err.statusCode || 500).send(err)
+            return null
+        })
+}
+
 export function dotNotation(nestled: string) {
     return nestled.replace(/[\[\]]/g, '.')
 }

@@ -7,6 +7,7 @@ import { jurisdictions } from '../config/refJurisdiction'
 import { Case, EnhancedRequest, SimpleCase } from '../lib/models'
 import { process } from '../lib/processors'
 import * as ccd from '../lib/services/ccd'
+import { asyncReturnOrError } from '../lib/util'
 
 import { listTemplates } from '../lib/templates'
 import { benefitTemplate } from '../lib/templates/sscs'
@@ -105,18 +106,6 @@ function sortResults(a: Case, b: Case) {
     return dateA - dateB
 }
 
-function asyncReturnOrError(promise: any, message: string, res: express.Response): any {
-    return promise
-        .then(data => {
-            return data
-        })
-        .catch(err => {
-            logger.error(err)
-            res.status(err.statusCode || 500).send(err)
-            return null
-        })
-}
-
 export function tidyTemplate(template: any) {
     return {
         columns: template.columns.map(column => {
@@ -135,17 +124,22 @@ export async function list(req: EnhancedRequest, res: express.Response, next: ex
 
     logger.info('Getting cases')
 
-    caseLists = await asyncReturnOrError(getCases(req.auth.userId), 'Error Getting cases', res)
+    caseLists = await asyncReturnOrError(getCases(req.auth.userId), 'Error Getting cases', res, logger)
 
     if (caseLists) {
         logger.info('Processing cases ', caseLists.length)
 
         let results = await asyncReturnOrError(
-            map(caseLists, async (caseList: Case[]) => {
-                return await processCaseList(caseList)
-            }),
+            map(
+                caseLists,
+                async (caseList: Case[]) => {
+                    return await processCaseList(caseList)
+                },
+                logger
+            ),
             'Error Processing List',
-            res
+            res,
+            logger
         )
 
         if (results) {
