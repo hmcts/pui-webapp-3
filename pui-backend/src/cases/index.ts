@@ -3,10 +3,11 @@ import * as express from 'express'
 import * as log4js from 'log4js'
 import * as striptags from 'striptags'
 import { config } from '../config'
-import { Case, EnhancedRequest, SimpleCase } from '../lib/model'
+import { Case, EnhancedRequest, SimpleCase } from '../lib/models'
 import { process } from '../lib/processors'
 import * as ccd from '../lib/services/ccd'
 import * as coh from '../lib/services/coh'
+import * as docs from '../lib/services/documents'
 import { templates } from '../lib/templates'
 import { valueOrNull } from '../lib/util'
 import * as caseList from './list'
@@ -28,7 +29,13 @@ export function replaceSectionValues(section: any, details: any): any {
     }
 }
 
-export async function getSchema(userId: string, jurisdiction: string, caseType: string, caseId: string): Promise<any> {
+export async function getSchema(
+    userId: string,
+    jurisdiction: string,
+    caseType: string,
+    caseId: string,
+    userRoles: any[]
+): Promise<any> {
     logger.info('Getting case details', userId, jurisdiction, caseType, caseId)
     const details = await ccd.getCase(userId, jurisdiction, caseType, caseId)
     logger.info('Getting case events')
@@ -69,11 +76,8 @@ export async function getSchema(userId: string, jurisdiction: string, caseType: 
     schema.case_jurisdiction = details.jurisdiction
     schema.case_type_id = details.case_type_id
 
-    // getDocuments(getDocIdList(caseData.documents), getOptionsDoc(req))
-    // .then(appendDocIdToDocument)
-    // .then(documents => {
-    //   {
-    // schema.documents = documents;
+    const documents = await docs.getDocuments(docs.getIds(details.documents), userRoles)
+    schema.documents = documents
 
     return schema
 }
@@ -84,7 +88,8 @@ export async function getCase(req: EnhancedRequest, res: express.Response, next:
             req.auth.userId,
             striptags(req.params.jur),
             striptags(req.params.caseType),
-            striptags(req.params.caseId)
+            striptags(req.params.caseId),
+            req.auth.roles
         )
 
         res.setHeader('content-type', 'application/json')

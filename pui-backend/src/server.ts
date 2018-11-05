@@ -6,15 +6,13 @@ import * as session from 'express-session'
 import { sanitizeBody } from 'express-validator/filter'
 import * as globalTunnel from 'global-tunnel-ng'
 import * as log4js from 'log4js'
+import * as sessionFileStore from 'session-file-store'
 
 // PUI imports
 import * as auth from './auth'
 import * as cases from './cases'
-import * as caseList from './cases/list'
-import * as ccd from './ccd'
 import { config } from './config'
-
-import * as sessionFileStore from 'session-file-store'
+import * as ccd from './lib/services/ccd'
 
 const app = express()
 const PORT = config.port

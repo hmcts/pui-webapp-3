@@ -1,8 +1,8 @@
 import * as express from 'express'
 
 export interface JurisdictionObject {
-    caseType: string,
-    filter: string,
+    caseType: string
+    filter: string
     jur: string
 }
 export interface EnhancedRequest extends express.Request {

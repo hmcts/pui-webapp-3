@@ -1,7 +1,7 @@
 import { TemplatePair } from '../models/templates'
 
 /*tslint:disable */
-export const defaultTemplate: TemplatePair = {
+export const moneyClaimCaseTemplate: TemplatePair = {
     detail: {
         details: {
             fields: [{ value: '$.id' }, { value: '-' }],
@@ -21,11 +21,11 @@ export const defaultTemplate: TemplatePair = {
                                 type: 'timeline',
                                 fields: [{ value: '$.events' }],
                             },
-                            // {
-                            //     name: 'Action on',
-                            //     type: 'case-action-alert',
-                            //     fields: [{ value: '$.state' }]
-                            // },
+                            {
+                                name: 'Action on',
+                                type: 'case-action-alert',
+                                fields: [{ value: '$.state|case_status_processor' }],
+                            },
                             {
                                 name: '',
                                 type: 'data-list',
@@ -49,7 +49,7 @@ export const defaultTemplate: TemplatePair = {
                         id: 'documents',
                         name: 'Case file',
                         type: 'document-panel',
-                        fields: [{ value: '' }],
+                        fields: [],
                     },
                 ],
             },
@@ -93,17 +93,21 @@ export const defaultTemplate: TemplatePair = {
             {
                 label: 'Parties',
                 case_field_id: 'parties',
-                value: [],
+                value: [
+                    '$.caseData.claimData.claimants[0].value.individual.name',
+                    'v',
+                    '$.caseData.claimData.defendants[0].value.individual.name',
+                ],
             },
             {
                 label: 'Type',
                 case_field_id: 'type',
-                value: ['$.caseTypeId'],
+                value: 'CMC',
             },
             {
                 label: 'Decision needed on',
                 case_field_id: 'status',
-                value: '$.status',
+                value: '$.state',
             },
             {
                 label: 'Case Start Date',

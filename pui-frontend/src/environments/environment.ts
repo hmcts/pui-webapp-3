@@ -18,7 +18,7 @@ export const environment = {
             case_data_url: '/api/ccd/data',
             document_management_url: 'api/ccd/documents',
             postcode_lookup_url: '/api/ccd/addresses?postcode=${postcode}',
-            login_url: 'https://localhost:3501/login',
+            login_url: 'http://idam.preprod.ccidam.reform.hmcts.net',
             oauth2_client_id: 'ccd_gateway',
             payments_url: '/api/ccd/payments',
             remote_document_management_url: 'http://localhost:4603/documents'
