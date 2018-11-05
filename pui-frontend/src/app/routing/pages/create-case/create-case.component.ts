@@ -11,9 +11,14 @@ export class CreateCaseComponent implements OnInit {
     caseTypeId = 'DIVORCE'
     eventTriggerId = 'solicitorCreate'
 
-    constructor(private router: Router) {}
+    // jurisdictionId = 'DIVORCE'
+    // caseTypeId = 'DIVORCE'
+    // eventTriggerId = 'Create'
 
-    ngOnInit() {}
+
+    constructor(private router: Router) { }
+
+    ngOnInit() { }
 
     submit(event: any): void {
         console.log('CaseCreateConsumerComponent submit event=', event)
