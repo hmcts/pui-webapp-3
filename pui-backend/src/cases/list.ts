@@ -79,21 +79,24 @@ function rawCasesReducer(caseList: Case[], columns) {
 
 async function processCaseList(caseList: Case[]): Promise<SimpleCase[]> {
     let results: SimpleCase[] = []
-
-    if (caseList) {
-        logger.info('Getting COR')
-        const casesData = await getCOR(caseList)
-        const jurisdiction = casesData[0].jurisdiction
-        const caseType = casesData[0].caseTypeId
-        logger.info(`Getting template ${jurisdiction}, ${caseType}`)
-        const template = listTemplates(jurisdiction, caseType)
-
-        results = rawCasesReducer(casesData, template.columns).filter(row => {
-            return Boolean(row.caseFields.caseRef)
-        })
+    try {
+        if (caseList) {
+            logger.info('Getting COR')
+            const casesData = await getCOR(caseList)
+            logger.info('got cor', casesData[0].id)
+            const jurisdiction = casesData[0].jurisdiction
+            const caseType = casesData[0].caseTypeId
+            logger.info(`Getting template ${jurisdiction}, ${caseType}`)
+            const template = listTemplates(jurisdiction, caseType)
+            results = rawCasesReducer(casesData, template.columns).filter(row => {
+                return Boolean(row.caseFields.caseRef)
+            })
+        }
+        console.log('results', results.length)
+        return results
+    } catch (e) {
+        return Promise.reject(e)
     }
-
-    return results
 }
 
 function sortResults(a: Case, b: Case) {
@@ -102,7 +105,7 @@ function sortResults(a: Case, b: Case) {
     return dateA - dateB
 }
 
-function asyncReturnOrError(promise: Promise<any>, message: string, res: express.Response): any {
+function asyncReturnOrError(promise: any, message: string, res: express.Response): any {
     return promise
         .then(data => {
             return data
@@ -128,7 +131,7 @@ export function tidyTemplate(template: any) {
 export async function list(req: EnhancedRequest, res: express.Response, next: express.NextFunction) {
     let caseLists: Case[][]
 
-    http = axios.create({})
+    http = axios.create({ timeout: 8000 })
 
     logger.info('Getting cases')
 
@@ -144,6 +147,7 @@ export async function list(req: EnhancedRequest, res: express.Response, next: ex
             'Error Processing List',
             res
         )
+
         if (results) {
             results = [].concat(...results).sort(sortResults)
             const aggregatedData = { ...tidyTemplate(benefitTemplate.list), results }

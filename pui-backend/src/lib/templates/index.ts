@@ -22,7 +22,6 @@ const map = {
 }
 
 function template(jud, jurisdiction, caseType, defaultTemplate, node: string) {
-    console.log(jud)
     return jud ? jud[caseType.toLowerCase()][node] : defaultTemplate
 }
 
