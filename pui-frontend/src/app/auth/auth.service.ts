@@ -86,4 +86,10 @@ export class AuthService {
         // do stuff!!
         return notExpired
     }
+
+
+    signOut() {
+        //implement delete cookie
+        console.log('sign out');
+    }
 }

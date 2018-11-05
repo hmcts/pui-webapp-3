@@ -7,13 +7,13 @@ import { Component, OnInit } from '@angular/core'
     styleUrls: ['./create-case.component.scss']
 })
 export class CreateCaseComponent implements OnInit {
-    jurisdictionId = 'TEST'
-    caseTypeId = 'TestAddressBookCase'
-    eventTriggerId = 'createCase'
+    // jurisdictionId = 'TEST'
+    // caseTypeId = 'TestAddressBookCase'
+    // eventTriggerId = 'createCase'
 
-    // jurisdictionId = 'DIVORCE'
-    // caseTypeId = 'DIVORCE'
-    // eventTriggerId = 'Create'
+    jurisdictionId = 'DIVORCE'
+    caseTypeId = 'DIVORCE'
+    eventTriggerId = 'hwfCreate'
 
 
     constructor(private router: Router) { }

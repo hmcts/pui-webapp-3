@@ -1,4 +1,5 @@
-import {Component, Input} from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
     selector: 'app-hmcts-global-header',
@@ -23,6 +24,13 @@ export class HmctsGlobalHeaderComponent {
         ]
     };
 
-    constructor() { }
+    constructor(private auth: AuthService) { }
 
+
+
+    signOut() {
+
+        this.auth.signOut();
+
+    }
 }
