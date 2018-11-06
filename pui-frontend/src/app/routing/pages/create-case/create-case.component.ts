@@ -13,8 +13,11 @@ export class CreateCaseComponent implements OnInit {
 
     // jurisdictionId = 'DIVORCE'
     // caseTypeId = 'DIVORCE'
-    // eventTriggerId = 'Create'
+    // eventTriggerId = 'hwfCreate'
 
+    // jurisdictionId = 'TEST'
+    // caseTypeId = 'TestAddressBookCase'
+    // eventTriggerId = 'createCase'
 
     constructor(private router: Router) { }
 
