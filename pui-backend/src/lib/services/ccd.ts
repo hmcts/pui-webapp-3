@@ -5,14 +5,18 @@ import * as log4js from 'log4js'
 import * as moment from 'moment'
 import * as striptags from 'striptags'
 import { config } from '../../config'
+import { errorInterceptor, successInterceptor } from '../../lib/interceptors'
 import { EnhancedRequest } from '../../lib/models'
+import { asyncReturnOrError } from '../../lib/util'
 import { JurisdictionObject } from '../models'
 import * as coh from './coh'
 
-const logger = log4js.getLogger('auth')
+const logger = log4js.getLogger('ccd')
 logger.level = config.logging
 
 const http: AxiosInstance = axios.create({})
+http.interceptors.response.use(successInterceptor, errorInterceptor)
+
 const apiUrl = config.services.ccd.dataApi
 
 function sortEvents(result1: any, result2: any): number {
@@ -21,17 +25,16 @@ function sortEvents(result1: any, result2: any): number {
 
 export async function get(req: EnhancedRequest, res: express.Response, next: express.NextFunction) {
     const url = striptags(req.url).replace('/api/ccd', '')
-    logger.info(`GET to ${config.services.ccd.componentApi}${url}`)
+    const response = await asyncReturnOrError(
+        http.get(`${config.services.ccd.componentApi}${url}`),
+        'Error Proxying CCD',
+        res,
+        logger
+    )
 
-    try {
-        const response = await http.get(`${config.services.ccd.componentApi}${url}`)
-
+    if (response) {
         res.status(200)
         res.send(JSON.stringify(response.data))
-    } catch (e) {
-        logger.error('Error on GET', exceptionFormatter(e, config.exceptionOptions))
-        res.status(e.response.status)
-        res.send()
     }
 }
 

@@ -7,8 +7,9 @@ export function asyncReturnOrError(promise: any, message: string, res: express.R
             return data
         })
         .catch(err => {
-            logger.error(err)
-            res.status(err.statusCode || 500).send(err)
+            const msg = `${message}: ${err.message}`
+            logger.error(msg)
+            res.status(err.statusCode || 500).send(msg)
             return null
         })
 }
@@ -39,4 +40,8 @@ export function exists(object: any, nestled: string, returnValue = false) {
     } else {
         return false
     }
+}
+
+export function shorten(str: string, maxLen: number): string {
+    return str.length > maxLen ? `${str.substring(0, maxLen)}...` : str
 }

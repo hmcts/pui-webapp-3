@@ -9,10 +9,10 @@ export const config = {
 
     indexUrl: '/',
     logging: 'info',
+    maxLogLine: 160,
     microservice: 'jui_webapp',
     port: 3000,
     protocol: 'http',
-
     proxy: {
         host: '172.16.0.7',
         port: 8080,

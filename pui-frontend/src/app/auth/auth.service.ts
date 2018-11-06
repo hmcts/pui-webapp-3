@@ -86,4 +86,9 @@ export class AuthService {
         // do stuff!!
         return notExpired
     }
+
+    signOut() {
+        console.log('logout')
+        window.location.href = '/api/logout'
+    }
 }
