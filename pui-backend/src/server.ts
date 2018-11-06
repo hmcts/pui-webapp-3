@@ -75,6 +75,8 @@ app.get('/oauth2/callback', auth.oauth)
 
 app.use(auth.attach)
 
+app.get('/api/logout', auth.logout)
+
 app.get('/api/user', auth.user)
 app.get('/api/cases', cases.getCases)
 app.get('/api/cases/:jur/:caseType/:caseId', cases.getCase)

@@ -89,7 +89,7 @@ export class AuthService {
 
 
     signOut() {
-        //implement delete cookie
-        console.log('sign out');
+        console.log('logout')
+        window.location.href = '/api/logout'
     }
 }

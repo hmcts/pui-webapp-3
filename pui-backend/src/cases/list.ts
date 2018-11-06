@@ -4,6 +4,7 @@ import * as log4js from 'log4js'
 import { map } from 'p-iteration'
 import { config } from '../config'
 import { jurisdictions } from '../config/refJurisdiction'
+import { errorInterceptor, successInterceptor } from '../lib/interceptors'
 import { Case, EnhancedRequest, SimpleCase } from '../lib/models'
 import { process } from '../lib/processors'
 import * as ccd from '../lib/services/ccd'
@@ -15,7 +16,9 @@ import { benefitTemplate } from '../lib/templates/sscs'
 const logger = log4js.getLogger('cases')
 logger.level = config.logging
 
-let http: AxiosInstance
+const http: AxiosInstance = axios.create({ timeout: 8000 })
+
+http.interceptors.response.use(successInterceptor, errorInterceptor)
 
 const CORJuristiction = 'SSCS'
 
@@ -37,6 +40,7 @@ async function getCOR(casesData: Case[]) {
     const caseIds = casesData.map(caseRow => 'case_id=' + caseRow.id).join('&')
 
     if (casesData[0].jurisdiction === CORJuristiction) {
+        logger.info(`Getting COR`)
         const hearings: any = await http.get(`${config.services.coh.corApi}/continuous-online-hearings/?${caseIds}`)
         if (hearings.online_hearings) {
             const caseStateMap = new Map(
@@ -82,9 +86,7 @@ async function processCaseList(caseList: Case[]): Promise<SimpleCase[]> {
     let results: SimpleCase[] = []
     try {
         if (caseList) {
-            logger.info('Getting COR')
             const casesData = await getCOR(caseList)
-            logger.info('got cor', casesData[0].id)
             const jurisdiction = casesData[0].jurisdiction
             const caseType = casesData[0].caseTypeId
             logger.info(`Getting template ${jurisdiction}, ${caseType}`)
@@ -93,7 +95,7 @@ async function processCaseList(caseList: Case[]): Promise<SimpleCase[]> {
                 return Boolean(row.caseFields.caseRef)
             })
         }
-        console.log('results', results.length)
+
         return results
     } catch (e) {
         return Promise.reject(e)
@@ -119,8 +121,6 @@ export function tidyTemplate(template: any) {
 
 export async function list(req: EnhancedRequest, res: express.Response, next: express.NextFunction) {
     let caseLists: Case[][]
-
-    http = axios.create({ timeout: 8000 })
 
     logger.info('Getting cases')
 
