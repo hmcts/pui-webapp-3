@@ -2,6 +2,21 @@
 // `ng build ---prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+
+// "api_url": "http://localhost:3454/aggregated",
+// "case_data_url": "http://localhost:3454/data",
+// "document_management_url": "http://localhost:3454/documents",
+// "login_url": "https://localhost:3501/login",
+// "logout_url": "http://localhost:3454/logout",
+// "oauth2_token_endpoint_url": "http://localhost:3454/oauth2",
+// "oauth2_client_id": "ccd_gateway",
+// "postcode_lookup_url": "http://localhost:3454/addresses?postcode=${postcode}",
+// "remote_document_management_url": "http://localhost:4603/documents",
+// "remote_print_service_url": "https://return-case-doc.dev.ccd.reform.hmcts.net"
+
+
+
+
 export const environment = {
     cookies: {
         token: '__auth__',
