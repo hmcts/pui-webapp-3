@@ -36,12 +36,18 @@ if (config.proxy) {
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
-
 app.use(
-    sanitizeBody('*')
-        .trim()
-        .escape()
+    bodyParser.raw({
+        type: 'application/octet-stream',
+        limit: '10mb',
+    })
 )
+
+// app.use(
+//     sanitizeBody('*')
+//         .trim()
+//         .escape()
+// )
 
 app.use((req, res, next) => {
     res.setHeader('Cache-Control', 'private, no-cache, no-store, max-age=0')
