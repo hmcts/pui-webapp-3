@@ -28,7 +28,7 @@ export const config = {
             corApi: 'http://coh-cor-aat.service.core-compute-aat.internal',
         },
         documents: {
-            api: 'https://dm-store-saat.service.core-compute-saat.internal',
+            api: 'https://dm-store-aat.service.core-compute-aat.internal',
         },
         idam: {
             idamApiUrl: 'https://preprod-idamapi.reform.hmcts.net:3511',

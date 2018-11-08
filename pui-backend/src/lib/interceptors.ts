@@ -1,25 +1,38 @@
 import * as log4js from 'log4js'
+import * as exceptionFormatter from 'exception-formatter'
 import { config } from '../config'
-import { shorten } from '../lib/util'
+import { shorten, valueOrNull } from '../lib/util'
 
-const logger = log4js.getLogger('interceptor')
-logger.level = config.logging
+export function requestInterceptor(request) {
+    const logger = log4js.getLogger('outgoing')
+    logger.level = config.logging
+
+    const url = shorten(request.url, config.maxLogLine)
+    logger.info(`${request.method.toUpperCase()} to ${url}`)
+    return request
+}
 
 export function successInterceptor(response) {
-    let url = response.config.url
-    if (url.length > 80) {
-        url = `${url.substring(1, config.maxLogLine)}...`
-    }
+    const logger = log4js.getLogger('return')
+    logger.level = config.logging
+
+    const url = shorten(response.config.url, config.maxLogLine)
 
     logger.info(`Success on ${response.config.method.toUpperCase()} to ${url}`)
 
     return response
 }
 
-export function errorInterceptor(error) {
-    const url = shorten(error.config.url, config.maxLogLine)
+export function errorInterceptor(response) {
+    const logger = log4js.getLogger('return')
+    logger.level = config.logging
 
-    logger.error(`Error on ${error.config.method.toUpperCase()} to ${url}`)
+    const url = shorten(response.config.url, config.maxLogLine)
 
-    throw new Error(error.response.data.message)
+    const error = valueOrNull(response, 'response.status') ? response.response.status : Error(response).message
+    const data = valueOrNull(response, 'response.status') ? JSON.stringify(response.response.data, null, 2) : null
+
+    logger.error(`Error on ${response.config.method.toUpperCase()} to ${url} (${error}) \n ${data}`)
+
+    return Promise.reject(response)
 }

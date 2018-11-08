@@ -12,7 +12,7 @@ import * as sessionFileStore from 'session-file-store'
 import * as auth from './auth'
 import * as cases from './cases'
 import { config } from './config'
-import * as ccd from './lib/services/ccd'
+import * as proxy from './lib/proxy'
 
 const app = express()
 const PORT = config.port
@@ -81,9 +81,9 @@ app.get('/api/user', auth.user)
 app.get('/api/cases', cases.getCases)
 app.get('/api/cases/:jur/:caseType/:caseId', cases.getCase)
 
-app.get('/api/ccd/*', ccd.get)
-app.post('/api/ccd/*', ccd.post)
-app.put('/api/ccd/*', ccd.put)
+app.get('/api/ccd/*', proxy.get)
+app.post('/api/ccd/*', proxy.post)
+app.put('/api/ccd/*', proxy.put)
 
 app.listen(PORT, () => {
     logger.info(`listening on port ${PORT}`)
