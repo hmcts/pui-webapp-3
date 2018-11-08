@@ -4,6 +4,7 @@ import * as express from 'express'
 import * as jwtDecode from 'jwt-decode'
 import * as log4js from 'log4js'
 import { config } from '../config'
+import { http } from '../lib'
 import { errorInterceptor, successInterceptor } from '../lib/interceptors'
 import { EnhancedRequest } from '../lib/models'
 import { serviceTokenGenerator } from './serviceToken'
@@ -11,14 +12,6 @@ import { serviceTokenGenerator } from './serviceToken'
 const secret = process.env.IDAM_SECRET
 const logger = log4js.getLogger('auth')
 logger.level = config.logging
-
-const http = axios.create({
-    headers: {
-        'Content-Type': 'application/json',
-    },
-})
-
-http.interceptors.response.use(successInterceptor, errorInterceptor)
 
 export async function attach(req: EnhancedRequest, res: express.Response, next: express.NextFunction) {
     const session = req.session!
@@ -116,7 +109,15 @@ export async function oauth(req: express.Request, res: express.Response, next: e
     }
 }
 
-export function user(req: EnhancedRequest, res: express.Response) {}
+export function user(req: EnhancedRequest, res: express.Response) {
+    const userJson = {
+        expires: req.auth.expires,
+        roles: req.auth.roles,
+        userId: req.auth.userId,
+    }
+    res.setHeader('Content-Type', 'application/json')
+    res.send(JSON.stringify(userJson))
+}
 
 // export function storeUrl(req: express.Request, res: express.Response, next: express.NextFunction) {
 //     const session = req.session
@@ -138,5 +139,6 @@ export function user(req: EnhancedRequest, res: express.Response) {}
 export function logout(req: EnhancedRequest, res: express.Response) {
     const redirect = config.indexUrl ? config.indexUrl : '/'
     res.clearCookie(config.cookies.token)
+    console.log('ugh')
     res.redirect(redirect)
 }

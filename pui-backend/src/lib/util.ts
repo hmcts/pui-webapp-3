@@ -20,7 +20,7 @@ export function dotNotation(nestled: string) {
 
 export function valueOrNull(object: any, nestled: string) {
     const value = exists(object, nestled, true)
-    return value ? value : true
+    return value ? value : null
 }
 
 export function exists(object: any, nestled: string, returnValue = false) {

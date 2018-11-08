@@ -1,19 +1,11 @@
-import axios, { AxiosInstance, AxiosResponse } from 'axios'
-import * as exceptionFormatter from 'exception-formatter'
-import * as express from 'express'
 import * as log4js from 'log4js'
-import * as moment from 'moment'
 import { map } from 'p-iteration'
-import * as striptags from 'striptags'
+import { http } from '../../lib'
 import { config } from '../../config'
-import { EnhancedRequest } from '../../lib/models'
-import { JurisdictionObject } from '../models'
-import * as coh from './coh'
+import { errorInterceptor, successInterceptor } from '../../lib/interceptors'
 
-const logger = log4js.getLogger('auth')
+const logger = log4js.getLogger('documents')
 logger.level = config.logging
-
-let http: AxiosInstance
 
 const url = config.services.documents.api
 
@@ -25,23 +17,22 @@ export function getIds(documents) {
 }
 
 export async function getDocument(docId: string, userRoles: any[]) {
-    http = axios.create({
+    logger.info(`Getting  document ${docId}`)
+
+    const response = await http.get(`${url}/documents/${docId}`, {
         headers: {
-            'user-roles': userRoles,
+            'user-roles': userRoles.join(),
         },
     })
 
-    const response = await http.get(`${url}/documents/${docId}`)
     const splitURL = response.data._links.self.href.split('/')
     response.data.id = splitURL[splitURL.length - 1]
     return response.data
 }
 
 export async function getDocuments(documentIds = [], userRoles: any[] = []) {
-    const documents = []
-    map(documentIds, async (docId: string) => {
+    const documents = map(documentIds, async (docId: string) => {
         return await getDocument(docId, userRoles)
     })
-
     return documents
 }

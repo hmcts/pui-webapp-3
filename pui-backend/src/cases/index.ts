@@ -9,7 +9,7 @@ import * as ccd from '../lib/services/ccd'
 import * as coh from '../lib/services/coh'
 import * as docs from '../lib/services/documents'
 import { templates } from '../lib/templates'
-import { valueOrNull } from '../lib/util'
+import { asyncReturnOrError, valueOrNull } from '../lib/util'
 import * as caseList from './list'
 import * as questions from './questions'
 import * as state from './state'
@@ -34,7 +34,8 @@ export async function getSchema(
     jurisdiction: string,
     caseType: string,
     caseId: string,
-    userRoles: any[]
+    req: EnhancedRequest,
+    res: express.Response
 ): Promise<any> {
     logger.info('Getting case details', userId, jurisdiction, caseType, caseId)
     const details = await ccd.getCase(userId, jurisdiction, caseType, caseId)
@@ -58,7 +59,7 @@ export async function getSchema(
     details.state = state.process({
         caseType,
         ccdState: details.state,
-        consentOrder: valueOrNull(details, 'details.case_data.consentOrder'),
+        consentOrder: valueOrNull(details, 'case_data.consentOrder'),
         hearingData: valueOrNull(hearing, 'online_hearings[0]'),
         hearingType: valueOrNull(details, 'case_data.appeal.hearingType'),
         jurisdiction,
@@ -76,27 +77,33 @@ export async function getSchema(
     schema.case_jurisdiction = details.jurisdiction
     schema.case_type_id = details.case_type_id
 
-    const documents = await docs.getDocuments(docs.getIds(details.documents), userRoles)
-    schema.documents = documents
+    const documents = await asyncReturnOrError(
+        docs.getDocuments(docs.getIds(details.documents), req.auth.roles),
+        'Error Getting documents',
+        res,
+        logger
+    )
 
-    return schema
+    if (documents) {
+        schema.documents = documents
+        return schema
+    } else {
+        return null
+    }
 }
 
 export async function getCase(req: EnhancedRequest, res: express.Response, next: express.NextFunction) {
-    try {
-        const data = await getSchema(
-            req.auth.userId,
-            striptags(req.params.jur),
-            striptags(req.params.caseType),
-            striptags(req.params.caseId),
-            req.auth.roles
-        )
-
+    const data = await getSchema(
+        req.auth.userId,
+        striptags(req.params.jur),
+        striptags(req.params.caseType),
+        striptags(req.params.caseId),
+        req,
+        res
+    )
+    if (data) {
         res.setHeader('content-type', 'application/json')
         res.status(200).send(JSON.stringify(data))
-    } catch (err) {
-        logger.error('Error getting case data', exceptionFormatter(err, config.exceptionOptions))
-        res.status(err.statusCode || 500).send(err)
     }
 }
 

@@ -1,10 +1,9 @@
-import axios, { AxiosInstance } from 'axios'
 import * as express from 'express'
 import * as log4js from 'log4js'
 import { map } from 'p-iteration'
 import { config } from '../config'
 import { jurisdictions } from '../config/refJurisdiction'
-import { errorInterceptor, successInterceptor } from '../lib/interceptors'
+import { http } from '../lib'
 import { Case, EnhancedRequest, SimpleCase } from '../lib/models'
 import { process } from '../lib/processors'
 import * as ccd from '../lib/services/ccd'
@@ -16,21 +15,20 @@ import { benefitTemplate } from '../lib/templates/sscs'
 const logger = log4js.getLogger('cases')
 logger.level = config.logging
 
-const http: AxiosInstance = axios.create({ timeout: 8000 })
-
-http.interceptors.response.use(successInterceptor, errorInterceptor)
-
 const CORJuristiction = 'SSCS'
 
 async function getCases(userId: string): Promise<Case[][]> {
     const collection: Case[][] = await map(jurisdictions, async jurisdiction => {
-        logger.info('Getting cases for ', jurisdiction.jur)
+        logger.info(`Getting cases for ${jurisdiction.jur}`)
+        try {
+            const response = await ccd.getCases(userId, jurisdiction)
 
-        const response = await ccd.getCases(userId, jurisdiction)
-
-        const caseList: Case[] = response.data.map(caseJson => Case.create(caseJson))
-
-        return caseList
+            const caseList: Case[] = response.data.map(caseJson => Case.create(caseJson))
+            return caseList
+        } catch (exception) {
+            logger.warn(`Problem getting cases for ${jurisdiction.jur}`)
+            return []
+        }
     })
 
     return collection
@@ -85,7 +83,7 @@ function rawCasesReducer(caseList: Case[], columns) {
 async function processCaseList(caseList: Case[]): Promise<SimpleCase[]> {
     let results: SimpleCase[] = []
     try {
-        if (caseList) {
+        if (caseList.length) {
             const casesData = await getCOR(caseList)
             const jurisdiction = casesData[0].jurisdiction
             const caseType = casesData[0].caseTypeId
@@ -143,6 +141,7 @@ export async function list(req: EnhancedRequest, res: express.Response, next: ex
         )
 
         if (results) {
+            console.log('results')
             results = [].concat(...results).sort(sortResults)
             const aggregatedData = { ...tidyTemplate(benefitTemplate.list), results }
             res.setHeader('Access-Control-Allow-Origin', '*')

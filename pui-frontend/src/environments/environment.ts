@@ -36,7 +36,7 @@ export const environment = {
             login_url: 'http://idam.preprod.ccidam.reform.hmcts.net',
             oauth2_client_id: 'ccd_gateway',
             payments_url: '/api/ccd/payments',
-            remote_document_management_url: 'http://localhost:4603/documents'
+            remote_document_management_url: '/api/ccd/documents'
         },
         ccd_data_api: 'https://ccd-data-store-api-aat.service.core-compute-aat.internal',
         idam_api: 'https://preprod-idamapi.reform.hmcts.net:3511',
