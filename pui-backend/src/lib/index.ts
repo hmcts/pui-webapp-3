@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios'
-import { errorInterceptor, successInterceptor, requestInterceptor } from '../lib/interceptors'
+import { errorInterceptor, requestInterceptor, successInterceptor } from '../lib/interceptors'
 
 export const http: AxiosInstance = axios.create({})
 

@@ -1,8 +1,7 @@
 import * as log4js from 'log4js'
 import { map } from 'p-iteration'
-import { http } from '../../lib'
 import { config } from '../../config'
-import { errorInterceptor, successInterceptor } from '../../lib/interceptors'
+import { http } from '../../lib'
 
 const logger = log4js.getLogger('documents')
 logger.level = config.logging
