@@ -9,6 +9,7 @@ export function requestInterceptor(request) {
 
     const url = shorten(request.url, config.maxLogLine)
     logger.info(`${request.method.toUpperCase()} to ${url}`)
+    console.log(request)
     return request
 }
 

@@ -46,9 +46,10 @@ export async function put(req: EnhancedRequest, res: express.Response, next: exp
 export async function post(req: EnhancedRequest, res: express.Response, next: express.NextFunction) {
     const url = striptags(req.url).replace('/api/ccd', '')
 
-    const contentType = req.headers['content-type']
-    const header = contentType ? { headers: { contentType } } : {}
-
+    const headers = {}
+    headers['content-type'] = req.headers['content-type']
+    const header = req.headers['content-type'] ? { headers } : {}
+    console.log(req.body)
     try {
         const response = await http.post(`${config.services.ccd.componentApi}${url}`, req.body, header)
         res.status(200)

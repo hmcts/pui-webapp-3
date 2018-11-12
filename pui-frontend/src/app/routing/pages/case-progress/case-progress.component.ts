@@ -8,7 +8,6 @@ import { ActivatedRoute } from '@angular/router'
 })
 export class CaseProgressComponent implements OnInit {
     caseId: string
-    //eventTriggerId = 'enterCaseIntoLegacy'
     eventTriggerId = 'solicitorUpdate'
 
 
