@@ -1,4 +1,5 @@
 import * as express from 'express'
+import * as session from 'express-session'
 
 export interface JurisdictionObject {
     caseType: string
@@ -12,6 +13,7 @@ export interface EnhancedRequest extends express.Request {
         userId: string
         expires: number
     }
+    session?
 }
 
 export interface Token {

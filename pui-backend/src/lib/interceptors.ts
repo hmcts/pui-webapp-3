@@ -1,5 +1,4 @@
 import * as log4js from 'log4js'
-import * as exceptionFormatter from 'exception-formatter'
 import { config } from '../config'
 import { shorten, valueOrNull } from '../lib/util'
 
@@ -9,7 +8,7 @@ export function requestInterceptor(request) {
 
     const url = shorten(request.url, config.maxLogLine)
     logger.info(`${request.method.toUpperCase()} to ${url}`)
-    console.log(request)
+
     return request
 }
 
@@ -20,7 +19,7 @@ export function successInterceptor(response) {
     const url = shorten(response.config.url, config.maxLogLine)
 
     logger.info(`Success on ${response.config.method.toUpperCase()} to ${url}`)
-
+    console.log(response.headers)
     return response
 }
 

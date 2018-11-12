@@ -2,8 +2,9 @@ import axios, { AxiosResponse } from 'axios'
 import * as log4js from 'log4js'
 import * as moment from 'moment'
 import { config } from '../../config'
-import { JurisdictionObject } from '../models'
 import { http } from '../../lib'
+import { JurisdictionObject } from '../models'
+
 import * as coh from './coh'
 
 const logger = log4js.getLogger('auth')
