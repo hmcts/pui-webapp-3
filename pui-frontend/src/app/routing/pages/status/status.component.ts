@@ -13,7 +13,7 @@ export class StatusComponent implements OnInit {
     message: string
     error: boolean
 
-    constructor(private route: ActivatedRoute) {}
+    constructor(private route: ActivatedRoute) { }
 
     ngOnInit() {
         this.route.params.subscribe(params => {
@@ -21,7 +21,7 @@ export class StatusComponent implements OnInit {
             this.returnPage = params.returnPage
             this.returnLabel = params.returnLabel
             this.message = params.message
-            this.error = params.error
+            this.error = params.error.toLowerCase() == 'true' ? true : false;
         })
     }
 }

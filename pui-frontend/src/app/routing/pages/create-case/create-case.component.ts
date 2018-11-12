@@ -19,9 +19,9 @@ export class CreateCaseComponent implements OnInit {
     // caseTypeId = 'TestAddressBookCase'
     // eventTriggerId = 'createCase'
 
-    constructor(private router: Router) {}
+    constructor(private router: Router) { }
 
-    ngOnInit() {}
+    ngOnInit() { }
 
     submit(event: any): void {
         console.log('CaseCreateConsumerComponent submit event=', event)
@@ -32,7 +32,7 @@ export class CreateCaseComponent implements OnInit {
                 returnLabel: 'Back to dashboard',
                 message: 'Case created',
                 error: false,
-                caseId: 23423423
+                caseId: event.caseId
             }
         ])
     }
