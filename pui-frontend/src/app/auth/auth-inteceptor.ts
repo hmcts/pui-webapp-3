@@ -24,7 +24,17 @@ export class AuthInteceptor implements HttpInterceptor {
 
                     else {
                         console.log('@@@error', err)
-                        //this.router.navigate([status', err.message]);
+                        // this.router.navigate([status', err.message]);
+                        this.router.navigate([
+                            'status',
+                            {
+                                returnPage: '/',
+                                returnLabel: 'Back to dashboard',
+                                message: 'woo hoo error rpt from auth.interceptor',
+                                error: true,
+                                caseId: -1
+                            }
+                        ])
                     }
                 }
             }

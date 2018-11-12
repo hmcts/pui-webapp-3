@@ -8,9 +8,12 @@ import { ActivatedRoute } from '@angular/router'
 })
 export class CaseProgressComponent implements OnInit {
     caseId: string
-    eventTriggerId = 'enterCaseIntoLegacy'
+    //eventTriggerId = 'enterCaseIntoLegacy'
+    eventTriggerId = 'solicitorUpdate'
 
-    constructor(private route: ActivatedRoute) {}
+
+
+    constructor(private route: ActivatedRoute) { }
 
     ngOnInit() {
         this.route.params.subscribe(params => {
