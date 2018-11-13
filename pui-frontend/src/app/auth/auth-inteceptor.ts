@@ -30,7 +30,7 @@ export class AuthInteceptor implements HttpInterceptor {
                             {
                                 returnPage: '/',
                                 returnLabel: 'Back to dashboard',
-                                message: 'woo hoo error rpt from auth.interceptor',
+                                message: err.message + ' status:' + err.status,
                                 error: true,
                                 caseId: -1
                             }
