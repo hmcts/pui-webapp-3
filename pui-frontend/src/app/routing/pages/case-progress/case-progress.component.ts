@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
+import { NgForm } from '@angular/forms';
+
 
 @Component({
     selector: 'app-case-progress',
@@ -9,6 +11,7 @@ import { ActivatedRoute } from '@angular/router'
 export class CaseProgressComponent implements OnInit {
     caseId: string
     eventTriggerId = 'solicitorUpdate'
+
 
 
 
@@ -27,4 +30,6 @@ export class CaseProgressComponent implements OnInit {
     cancel(event: any): void {
         console.log('CaseProgressConsumerComponent cancel event=', event)
     }
+
+
 }

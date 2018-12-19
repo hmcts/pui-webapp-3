@@ -1,5 +1,9 @@
 import { Router } from '@angular/router'
 import { Component, OnInit } from '@angular/core'
+import { NgForm } from '@angular/forms';
+import { Jurisdiction } from '@hmcts/ccd-case-ui-toolkit';
+
+
 
 @Component({
     selector: 'app-create-case',
@@ -7,17 +11,18 @@ import { Component, OnInit } from '@angular/core'
     styleUrls: ['./create-case.component.scss']
 })
 export class CreateCaseComponent implements OnInit {
-    jurisdictionId = 'DIVORCE'
-    caseTypeId = 'DIVORCE'
-    eventTriggerId = 'solicitorCreate'
-
     // jurisdictionId = 'DIVORCE'
     // caseTypeId = 'DIVORCE'
-    // eventTriggerId = 'hwfCreate'
+    // eventTriggerId = 'solicitorCreate'
 
-    // jurisdictionId = 'TEST'
-    // caseTypeId = 'TestAddressBookCase'
-    // eventTriggerId = 'createCase'
+    caseSelected: string
+
+    caseType: object = {
+        jurisdictionId: "notselected",
+        caseTypeId: "",
+        eventTriggerId: ""
+    }
+
 
     constructor(private router: Router) { }
 
@@ -39,5 +44,12 @@ export class CreateCaseComponent implements OnInit {
 
     cancel(event: any): void {
         console.log('CaseCreateConsumerComponent cancel event=', event)
+    }
+
+
+
+    chooseEvent() {
+        this.caseType = JSON.parse(this.caseSelected)
+        console.log(this.caseType)
     }
 }
