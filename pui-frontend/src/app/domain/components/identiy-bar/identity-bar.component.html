@@ -3,10 +3,12 @@
     <div class="hmcts-identity-bar__container">
 
         <div class="hmcts-identity-bar__details">
-
             <span data-selector="data-casebar-details-component" class="hmcts-identity-bar__title">
                 <b>{{case.details?.fields[0].value || ""}}</b> and <b>{{case.details?.fields[1].value || ""}}</b>
             </span>
+        </div>
+        <div class="hmcts-identity-bar__actions">
+            <app-menu></app-menu>
         </div>
 
     </div>

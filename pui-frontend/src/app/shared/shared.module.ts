@@ -12,6 +12,7 @@ import { CaseActionsComponent } from './components/case-actions/case-actions.com
 import { CaseActionAlertComponent } from './components/case-action-alert/case-action-alert.component';
 import { DataListComponent } from './components/data-list/data-list.component';
 import { GovukModule } from '../govuk/govuk.module';
+import {MenuComponent} from "./components/menu/menu.component";
 
 
 
@@ -25,7 +26,7 @@ import { GovukModule } from '../govuk/govuk.module';
         GovukModule,
         HmctsModule
     ],
-    declarations: [CaseActionsComponent, CaseActionAlertComponent, DataListComponent, FooterComponent, TableComponent],
-    exports: [CaseActionsComponent, CaseActionAlertComponent, DataListComponent, FooterComponent, TableComponent]
+    declarations: [CaseActionsComponent, CaseActionAlertComponent, DataListComponent, FooterComponent, TableComponent, MenuComponent],
+    exports: [CaseActionsComponent, CaseActionAlertComponent, DataListComponent, FooterComponent, TableComponent, MenuComponent]
 })
 export class SharedModule { }
