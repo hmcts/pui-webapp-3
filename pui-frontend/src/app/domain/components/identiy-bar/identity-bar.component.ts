@@ -3,10 +3,10 @@ import 'rxjs/add/operator/filter';
 
 @Component({
     selector: 'app-casebar',
-    templateUrl: './casebar.component.html',
-    styleUrls: ['./casebar.component.scss']
+    templateUrl: './identity-bar.component.html',
+    styleUrls: ['./identity-bar.component.scss']
 })
-export class CaseBarComponent {
+export class IdentityBarComponent {
 
     @Input() case: any;
 

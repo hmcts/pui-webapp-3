@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { CaseBarComponent } from './casebar.component';
+import { IdentityBarComponent } from './identity-bar.component';
 import { SharedModule } from '../../../shared/shared.module';
 import { DomainModule } from '../../domain.module';
 import { CaseService } from '../../services/case.service';
@@ -16,9 +16,9 @@ const configMock = {
     }
 };
 
-describe('CaseBarComponent', () => {
-    let component: CaseBarComponent;
-    let fixture: ComponentFixture<CaseBarComponent>;
+describe('IdentityBarComponent', () => {
+    let component: IdentityBarComponent;
+    let fixture: ComponentFixture<IdentityBarComponent>;
     let httpMock: HttpTestingController;
     let nativeElement;
     let element;
@@ -45,7 +45,7 @@ describe('CaseBarComponent', () => {
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(CaseBarComponent);
+        fixture = TestBed.createComponent(IdentityBarComponent);
         component = fixture.componentInstance;
         component.case = {
             id: '1244'
@@ -80,18 +80,18 @@ describe('CaseBarComponent', () => {
         });
 
         it('should set a DataList Component for each section in panelData', () => {
-            expect(element.nativeElement.querySelectorAll(Selector.selector('data-casebar-details-component')).length)
+            expect(element.nativeElement.querySelectorAll(Selector.selector('data-identiy-bar-details-component')).length)
                 .toBe(1);
         });
 
         it(`should set the DataList Component's title to the sections name`, () => {
-            const actualDetails = element.nativeElement.querySelectorAll(Selector.selector('data-casebar-details-component'));
+            const actualDetails = element.nativeElement.querySelectorAll(Selector.selector('data-identiy-bar-details-component'));
             expect(actualDetails.textContent)
                 .toEqual(component.case.details.fields[0].textContent);
         });
 
         it(`should set the DataList Component's title to the sections name`, () => {
-            const actualTitles = element.nativeElement.querySelectorAll(Selector.selector('data-casebar-title-component'));
+            const actualTitles = element.nativeElement.querySelectorAll(Selector.selector('data-identiy-bar-title-component'));
             expect(actualTitles.textContent)
                 .toEqual(component.case.details.fields[1].textContent);
         });
