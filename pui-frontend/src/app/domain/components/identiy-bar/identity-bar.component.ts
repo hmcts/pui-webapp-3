@@ -18,7 +18,7 @@ export class IdentityBarComponent implements OnInit{
             {
                 action: '../decision/create',
                 text: 'Make decision',
-                type: 'button'
+                type: 'link'
             },
             {   action: '../hearing/list',
                 text: 'List for hearing',

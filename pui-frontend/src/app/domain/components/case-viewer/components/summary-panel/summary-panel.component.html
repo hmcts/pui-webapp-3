@@ -1,9 +1,8 @@
-<app-case-actions
-    [header]="panelData.name"
-    [actionPrimaryButton]="{href: '../decision/create', text: 'Make decision'}"
-    [actionSecondaryButton]="{href: '../hearing/list', text: 'List for hearing'}"
-></app-case-actions>
-
+<div class="hmcts-page-heading">
+    <div class="hmcts-page-heading__title-wrapper">
+        <h1 data-selector="heading" class="hmcts-page-heading__title govuk-heading-xl">{{panelData.name}}</h1>
+    </div>
+</div>
 <div data-selector="summary-panel-component" class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <ng-container *ngFor="let section of panelData.sections | slice:1">

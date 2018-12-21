@@ -8,7 +8,6 @@ import { HmctsModule } from '../hmcts/hmcts.module'
 
 import { FooterComponent } from './components/footer/footer.component'
 import { TableComponent } from './components/table/table.component';
-import { CaseActionsComponent } from './components/case-actions/case-actions.component';
 import { CaseActionAlertComponent } from './components/case-action-alert/case-action-alert.component';
 import { DataListComponent } from './components/data-list/data-list.component';
 import { GovukModule } from '../govuk/govuk.module';
@@ -26,7 +25,7 @@ import {MenuComponent} from "./components/menu/menu.component";
         GovukModule,
         HmctsModule
     ],
-    declarations: [CaseActionsComponent, CaseActionAlertComponent, DataListComponent, FooterComponent, TableComponent, MenuComponent],
-    exports: [CaseActionsComponent, CaseActionAlertComponent, DataListComponent, FooterComponent, TableComponent, MenuComponent]
+    declarations:  [CaseActionAlertComponent, DataListComponent, FooterComponent, TableComponent, MenuComponent],
+    exports: [CaseActionAlertComponent, DataListComponent, FooterComponent, TableComponent, MenuComponent]
 })
 export class SharedModule { }
