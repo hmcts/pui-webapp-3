@@ -1,18 +1,28 @@
 
 <div class="hmcts-menu">
     <div class="hmcts-menu__wrapper">
+        <ng-container  *ngFor="let item of items">
+            <a *ngIf="item.type === 'link'; else noResultsOrError " [routerLink]="item.action"
+               [ngClass]="item.classes" class="govuk-button hmcts-menu__item">
+                {{item.text}}
+            </a>
+            <button *ngIf="item.type !== 'link'" [attr.data]="item.action" (click)="onActionSubmit(item)" type="submit" [ngClass]="item.classes" class="govuk-button hmcts-menu__item ">
+                {{item.text}}
+            </button>
+        </ng-container>
 
-        <button type="submit" class="govuk-button hmcts-menu__item  ">
-            Make decision
-        </button>
+        <!--<a class="govuk-button hmcts-menu__item"></a>-->
+        <!--<button type="submit" class="govuk-button hmcts-menu__item  ">-->
+            <!--Make decision-->
+        <!--</button>-->
 
-        <button type="submit" class="govuk-button hmcts-menu__item hmcts-button--secondary ">
-            List for hearing
-        </button>
+        <!--<button type="submit" class="govuk-button hmcts-menu__item hmcts-button&#45;&#45;secondary ">-->
+            <!--List for hearing-->
+        <!--</button>-->
 
-        <button type="submit" class="govuk-button hmcts-menu__item hmcts-button--secondary ">
-            End case
-        </button>
+        <!--<button type="submit" class="govuk-button hmcts-menu__item hmcts-button&#45;&#45;secondary ">-->
+            <!--End case-->
+        <!--</button>-->
 
     </div>
 </div>

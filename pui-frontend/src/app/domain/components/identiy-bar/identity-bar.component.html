@@ -1,5 +1,4 @@
 <div class="hmcts-identity-bar">
-
     <div class="hmcts-identity-bar__container">
 
         <div class="hmcts-identity-bar__details">
@@ -7,10 +6,12 @@
                 <b>{{case.details?.fields[0].value || ""}}</b> and <b>{{case.details?.fields[1].value || ""}}</b>
             </span>
         </div>
-        <div class="hmcts-identity-bar__actions">
-            <app-menu></app-menu>
+'
+        <div class="hmcts-identity-bar__actions" data-selector="data-casebar-details-component">
+            <app-menu [items]="menuItems"
+                      (onButtonSubmit)="onButtonSubmit($event)">
+            </app-menu>
         </div>
 
     </div>
-
 </div>
