@@ -1,5 +1,6 @@
 <div class="hmcts-identity-bar__details">
-    <span data-selector="data-casebar-details-component" class="hmcts-identity-bar__title">
+    <span data-selector="data-casebar-details-component" class="hmcts-identity-bar__title"
+          *ngIf="items.title">
         <b>{{items.title['candidate1'] || ""}}</b> and <b>{{items.title['candidate2'] || ""}}</b>
     </span>
 </div>
@@ -7,19 +8,24 @@
 <div class="hmcts-identity-bar__actions" data-selector="data-casebar-details-component">
     <div class="hmcts-menu">
         <div class="hmcts-menu__wrapper">
-            <ng-container  *ngFor="let item of items.items">
-                <a *ngIf="item.type === 'link'; else noResultsOrError " [routerLink]="item.action"
-                   [ngClass]="item.classes" class="govuk-button hmcts-menu__item">
-                    {{item.text}}
-                </a>
-                <button *ngIf="item.type === 'button'" [attr.data]="item.action" (click)="onActionSubmit(item)" type="submit" [ngClass]="item.classes" class="govuk-button hmcts-menu__item ">
-                    {{item.text}}
-                </button>
-
-                <ng-container *ngIf="item.type === 'dropdown'">
-                    <app-dropdown-menu></app-dropdown-menu>
+            <ng-container *ngIf="menuConfig.type === 'link'; else isDropdown">
+                <ng-container  *ngFor="let item of items.items">
+                    <a *ngIf="item.type === 'link'" [routerLink]="item.action"
+                       [ngClass]="item.classes" class="govuk-button hmcts-menu__item">
+                        {{item.text}}
+                    </a>
+                    <button *ngIf="item.type === 'button'" [attr.data]="item.action" (click)="onActionSubmit(item)" type="submit" [ngClass]="item.classes" class="govuk-button hmcts-menu__item ">
+                        {{item.text}}
+                    </button>
                 </ng-container>
             </ng-container>
+
+            <ng-template #isDropdown>
+                <app-dropdown-menu
+                        [items]="items.items"
+                        [config]="menuConfig">
+                </app-dropdown-menu>
+            </ng-template>
         </div>
     </div>
 </div>

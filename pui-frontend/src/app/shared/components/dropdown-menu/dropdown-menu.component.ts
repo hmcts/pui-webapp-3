@@ -1,4 +1,6 @@
 import {Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {MenuConfigModel} from "../../../models/menu-config.model";
+import {MenuItemsModel} from "../../../models/menu-items.model";
 
 @Component({
     selector: 'app-dropdown-menu',
@@ -6,7 +8,8 @@ import {Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output
     styleUrls: ['./dropdown-menu.component.scss']
 })
 export class DropdownMenuComponent implements OnInit {
-    @Input() items: {[id: string]: string}[];
+    @Input() items: MenuItemsModel;
+    @Input() config: MenuConfigModel;
     @ViewChild('optionsDropdown') optionsDropdown: ElementRef;
     styles = {display: 'none'};
 

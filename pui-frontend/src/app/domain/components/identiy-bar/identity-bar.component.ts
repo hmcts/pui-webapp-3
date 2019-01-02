@@ -32,11 +32,6 @@ export class IdentityBarComponent implements OnInit{
                 text: 'List for hearing',
                 classes: 'hmcts-button--secondary',
                 type: 'link'
-            },
-            {   action: '../hearing/list',
-                text: 'List for hearing',
-                classes: 'hmcts-button--secondary',
-                type: 'link'
             }]
         };
 

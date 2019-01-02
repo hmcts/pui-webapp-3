@@ -5,5 +5,4 @@ export interface MenuItemsModel {
     items: {
         [id: string]: string
     }[];
-
 }
