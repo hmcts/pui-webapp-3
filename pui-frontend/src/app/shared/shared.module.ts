@@ -12,8 +12,7 @@ import { CaseActionAlertComponent } from './components/case-action-alert/case-ac
 import { DataListComponent } from './components/data-list/data-list.component';
 import { GovukModule } from '../govuk/govuk.module';
 import {MenuComponent} from "./components/menu/menu.component";
-
-
+import {DropdownMenuComponent} from "./components/dropdown-menu/dropdown-menu.component";
 
 @NgModule({
     imports: [
@@ -25,7 +24,7 @@ import {MenuComponent} from "./components/menu/menu.component";
         GovukModule,
         HmctsModule
     ],
-    declarations:  [CaseActionAlertComponent, DataListComponent, FooterComponent, TableComponent, MenuComponent],
-    exports: [CaseActionAlertComponent, DataListComponent, FooterComponent, TableComponent, MenuComponent]
+    declarations:  [CaseActionAlertComponent, DataListComponent, FooterComponent, TableComponent, MenuComponent, DropdownMenuComponent],
+    exports: [CaseActionAlertComponent, DataListComponent, FooterComponent, TableComponent, MenuComponent, DropdownMenuComponent]
 })
 export class SharedModule { }

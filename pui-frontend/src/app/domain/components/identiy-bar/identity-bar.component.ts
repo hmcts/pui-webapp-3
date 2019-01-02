@@ -8,7 +8,7 @@ import 'rxjs/add/operator/filter';
 })
 export class IdentityBarComponent implements OnInit{
 
-    @Input() case: any;
+    @Input() case: any; // todo add this to menuitems
     menuItems: {[id: string]: string}[];
 
     constructor() {}
@@ -24,6 +24,11 @@ export class IdentityBarComponent implements OnInit{
                 text: 'List for hearing',
                 classes: 'hmcts-button--secondary',
                 type: 'link'
+            },
+            {   action: '../hearing/list',
+                text: 'List for hearing',
+                classes: 'hmcts-button--secondary',
+                type: 'dropdown'
             }
         ]
     }

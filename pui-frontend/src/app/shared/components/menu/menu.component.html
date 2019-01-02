@@ -6,9 +6,13 @@
                [ngClass]="item.classes" class="govuk-button hmcts-menu__item">
                 {{item.text}}
             </a>
-            <button *ngIf="item.type !== 'link'" [attr.data]="item.action" (click)="onActionSubmit(item)" type="submit" [ngClass]="item.classes" class="govuk-button hmcts-menu__item ">
+            <button *ngIf="item.type === 'button'" [attr.data]="item.action" (click)="onActionSubmit(item)" type="submit" [ngClass]="item.classes" class="govuk-button hmcts-menu__item ">
                 {{item.text}}
             </button>
+
+            <ng-container *ngIf="item.type === 'dropdown'">
+                <app-dropdown-menu></app-dropdown-menu>
+            </ng-container>
         </ng-container>
     </div>
 </div>
