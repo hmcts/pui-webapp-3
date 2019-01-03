@@ -8,12 +8,11 @@ import { HmctsModule } from '../hmcts/hmcts.module'
 
 import { FooterComponent } from './components/footer/footer.component'
 import { TableComponent } from './components/table/table.component';
-import { CaseActionsComponent } from './components/case-actions/case-actions.component';
 import { CaseActionAlertComponent } from './components/case-action-alert/case-action-alert.component';
 import { DataListComponent } from './components/data-list/data-list.component';
 import { GovukModule } from '../govuk/govuk.module';
-
-
+import {MenuComponent} from "./components/menu/menu.component";
+import {DropdownMenuComponent} from "./components/dropdown-menu/dropdown-menu.component";
 
 @NgModule({
     imports: [
@@ -25,7 +24,7 @@ import { GovukModule } from '../govuk/govuk.module';
         GovukModule,
         HmctsModule
     ],
-    declarations: [CaseActionsComponent, CaseActionAlertComponent, DataListComponent, FooterComponent, TableComponent],
-    exports: [CaseActionsComponent, CaseActionAlertComponent, DataListComponent, FooterComponent, TableComponent]
+    declarations:  [CaseActionAlertComponent, DataListComponent, FooterComponent, TableComponent, MenuComponent, DropdownMenuComponent],
+    exports: [CaseActionAlertComponent, DataListComponent, FooterComponent, TableComponent, MenuComponent, DropdownMenuComponent]
 })
 export class SharedModule { }

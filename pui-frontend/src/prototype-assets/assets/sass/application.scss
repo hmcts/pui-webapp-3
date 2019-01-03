@@ -20,6 +20,13 @@ $govuk-global-styles: true;
 // PBA styles
 @import "pui/pba";
 
+#content {
+  @include mq($from: desktop) {
+    margin: 0;
+    max-width: 1220px;
+  }
+}
+
 // Home office icon-small
 .side-space {
            margin-right: .5em;
@@ -118,7 +125,7 @@ mark.comment {
   .hmcts-page-heading__actions-wrapper {
     display: inline-block;
     vertical-align: top;
-
+    //float: right; TODO can't float because is liked to heading summary page
     .hmcts-page-heading__button:first-child  {
       margin-left: 0;
     }
@@ -126,7 +133,6 @@ mark.comment {
   }
 
   .hmcts-page-heading__button {
-    margin-left: govuk-spacing(4);
     margin-top: govuk-spacing(1);
   }
 

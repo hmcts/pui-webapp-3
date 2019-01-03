@@ -1,0 +1,18 @@
+<div class="hmcts-identity-bar">
+    <div class="hmcts-identity-bar__container">
+
+        <div class="hmcts-identity-bar__details">
+            <span data-selector="data-casebar-details-component" class="hmcts-identity-bar__title">
+                <b>{{menuItems.title['candidate1'] || ""}}</b> and <b>{{menuItems.title['candidate2']  || ""}}</b>
+            </span>
+        </div>
+'
+        <div class="hmcts-identity-bar__actions" data-selector="data-casebar-details-component">
+            <app-menu [items]="menuItems"
+                      [menuConfig]="menuConfig"
+                      (onButtonSubmit)="onButtonSubmit($event)">
+            </app-menu>
+        </div>
+
+    </div>
+</div>
