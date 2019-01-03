@@ -37,7 +37,7 @@ export class IdentityBarComponent implements OnInit{
 
         this.menuConfig = {
             buttonText: 'Actions',
-            type: 'dropdown'
+            type: 'list'
         }
 
     }
