@@ -1,12 +1,14 @@
 import {Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, ViewChild} from '@angular/core';
 
+
 @Component({
     selector: 'app-dropdown-menu',
     templateUrl: './dropdown-menu.component.html',
     styleUrls: ['./dropdown-menu.component.scss']
 })
 export class DropdownMenuComponent implements OnInit {
-    @Input() items: {[id: string]: string}[];
+    @Input() items
+    @Input() config
     @ViewChild('optionsDropdown') optionsDropdown: ElementRef;
     styles = {display: 'none'};
 

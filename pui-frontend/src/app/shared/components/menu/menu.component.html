@@ -1,18 +1,26 @@
-
 <div class="hmcts-menu">
     <div class="hmcts-menu__wrapper">
-        <ng-container  *ngFor="let item of items">
-            <a *ngIf="item.type === 'link'; else noResultsOrError " [routerLink]="item.action"
-               [ngClass]="item.classes" class="govuk-button hmcts-menu__item">
-                {{item.text}}
-            </a>
-            <button *ngIf="item.type === 'button'" [attr.data]="item.action" (click)="onActionSubmit(item)" type="submit" [ngClass]="item.classes" class="govuk-button hmcts-menu__item ">
-                {{item.text}}
-            </button>
-
-            <ng-container *ngIf="item.type === 'dropdown'">
-                <app-dropdown-menu></app-dropdown-menu>
+        <ng-container *ngIf="menuConfig.type === 'list'; else isDropdown">
+            <ng-container  *ngFor="let item of items.items">
+                <a *ngIf="item.type === 'link'" [routerLink]="item.action"
+                   [ngClass]="item.classes" class="govuk-button hmcts-menu__item">
+                    {{item.text}}
+                </a>
+                <button *ngIf="item.type === 'button'" [attr.data]="item.action"
+                        (click)="onActionSubmit(item)" type="submit"
+                        [ngClass]="item.classes" class="govuk-button hmcts-menu__item ">
+                    {{item.text}}
+                </button>
             </ng-container>
         </ng-container>
+
+        <ng-template #isDropdown>
+            <app-dropdown-menu
+                    [items]="items.items"
+                    [config]="menuConfig">
+            </app-dropdown-menu>
+        </ng-template>
+
     </div>
 </div>
+
