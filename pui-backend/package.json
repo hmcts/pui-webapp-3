@@ -29,7 +29,7 @@
         "@types/express-session": "^1.15.11",
         "@types/log4js": "^2.3.5",
         "await-to-js": "^2.0.1",
-        "axios": "^0.18.0",
+        "axios": "^0.21.1",
         "body-parser": "^1.18.3",
         "camelcase": "^5.0.0",
         "cookie-parser": "^1.4.3",
